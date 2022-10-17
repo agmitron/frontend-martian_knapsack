@@ -1,0 +1,18 @@
+.root {
+  display: flex;
+  font-size: var(--size-text-xl);
+  line-height: var(--line-height-text-xl);
+  color: var(--color-typo-secondary);
+}
+
+.label {
+  margin-right: 12px;
+
+  &::after {
+    content: ':';
+  }
+}
+
+.value {
+  font-weight: bold;
+}

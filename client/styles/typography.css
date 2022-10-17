@@ -1,0 +1,29 @@
+:root {
+  /* SM */
+  --size-text-sm: 16px;
+  --line-height-text-sm: 16px;
+
+  /* MD */
+  --size-text-md: 18px;
+  --line-height-text-md: 30px;
+
+  /* LG */
+  --size-text-lg: 20px;
+  --line-height-text-lg: 20px;
+
+  /* XL */
+  --size-text-xl: 22px;
+  --line-height-text-xl: 28.38px;
+
+  /* 2XL */
+  --size-text-2xl: 24px;
+  --line-height-text-2xl: 34px;
+
+  /* 3XL */
+  --size-text-3xl: 30px;
+  --line-height-text-3xl: 38.7px;
+
+  /* 4XL */
+  --size-text-4xl: 36px;
+  --line-height-text-4xl: 36px;
+}

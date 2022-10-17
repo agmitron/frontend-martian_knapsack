@@ -1,0 +1,26 @@
+@font-face {
+  font-family: Ubuntu;
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  src: url('../fonts/Ubuntu/Ubuntu-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: Ubuntu;
+  font-display: swap;
+  font-weight: bold;
+  font-style: normal;
+  src: url('../fonts/Ubuntu/Ubuntu-Bold.ttf') format('truetype');
+}
+
+html {
+  box-sizing: border-box;
+  font-family: Ubuntu, Lucida Grande, Helvetica Neue, Arial, sans-serif;
+}
+
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}

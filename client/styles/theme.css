@@ -1,0 +1,31 @@
+$rgb-base-primary: 0, 0, 0;
+$rgb-base-secondary: 255, 255, 255;
+$rgb-base-alert: 235, 87, 87;
+$rgb-base-muted: 209, 213, 219;
+
+$rgb-brand-primary: 159, 166, 40;
+
+:root {
+  /* Typography colors */
+  --color-typo-primary: rgb($rgb-base-primary);
+  --color-typo-secondary: rgb($rgb-base-secondary);
+
+  /* Background colors */
+  --color-bg-primary: rgb($rgb-base-secondary);
+
+  /* Status colors */
+  --color-status-alert: rgb($rgb-base-alert);
+  --color-status-accent: rgb($rgb-brand-primary);
+  --color-status-accent-30: rgba($rgb-brand-primary, 0.3);
+  --color-status-accent-80: rgba($rgb-brand-primary, 0.8);
+
+  /* Border */
+  --border-primary: 1px solid rgb($rgb-base-muted);
+  --border-secondary: 1px solid rgba($rgb-base-muted, 0.5);
+  --border-accent: 1px solid rgb($rgb-brand-primary);
+
+  /* Border radius */
+  --border-radius-sm: 6px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 20px;
+}

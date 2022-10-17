@@ -1,0 +1,17 @@
+.root {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 80px;
+}
+
+.column {
+  display: grid;
+  grid-template-rows: 160px auto 1fr;
+  row-gap: 36px;
+}
+
+.list {
+  display: grid;
+  align-content: start;
+  row-gap: 24px;
+}

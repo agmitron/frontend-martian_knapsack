@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+  align-items: center;
+  height: 68px;
+  padding: 8px 80px;
+  background-color: var(--color-status-accent);
+}
+
+.logo {
+  transform: translateY(4px);
+}
+
+.title {
+  margin-left: 21px;
+  font-size: var(--size-text-3xl);
+  line-height: var(--line-height-text-3xl);
+  font-weight: bold;
+  color: var(--color-typo-secondary);
+}
+
+.value {
+  margin-left: auto;
+}
