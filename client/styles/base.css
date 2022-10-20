@@ -16,7 +16,8 @@
 
 html {
   box-sizing: border-box;
-  font-family: Ubuntu, Lucida Grande, Helvetica Neue, Arial, sans-serif;
+  font-family: Ubuntu, "Lucida Grande", "Helvetica Neue", Arial, sans-serif;
+  overflow-y: scroll;
 }
 
 *,

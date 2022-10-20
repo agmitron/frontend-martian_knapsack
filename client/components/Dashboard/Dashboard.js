@@ -32,20 +32,26 @@ const Dashboard = () => {
     useApplicationActions();
 
   const storage = useMemo(
-    () => ({ items: storageItems, ...getComputedValues(storageItems) }),
-    [storageItems]
+    () => ({
+      items: storageItems,
+      ...getComputedValues(storageItems),
+      loading
+    }),
+    [storageItems, loading]
   );
 
   const cargoHold = useMemo(
     () => ({
       items: cargoHoldItems,
       weightLimit: cargoHoldWeightLimit,
-      ...getComputedValues(cargoHoldItems)
+      ...getComputedValues(cargoHoldItems),
+      loading
     }),
-    [cargoHoldWeightLimit, cargoHoldItems]
+    [cargoHoldWeightLimit, cargoHoldItems, loading]
   );
 
-  if (error || loading) return null;
+  // TODO: handle error, show better UI
+  if (error) return <h1>Something went wrong.</h1>;
 
   return (
     <DashboardView
@@ -56,6 +62,7 @@ const Dashboard = () => {
       onResetItems={resetItems}
       onMoveToCargoHold={moveItemToCargoHold}
       onMoveToStorage={moveItemToStorage}
+      filter="storage"
     />
   );
 };

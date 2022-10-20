@@ -21,3 +21,14 @@
 .value {
   margin-left: auto;
 }
+
+@media screen and (max-width: 426px) {
+  .root {
+    padding: 8px 20px;
+  }
+
+  .title {
+    font-size: var(--size-text-sm);
+    line-height: var(--line-height-text-sm);
+  }
+}

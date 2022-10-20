@@ -5,6 +5,9 @@ $rgb-base-muted: 209, 213, 219;
 
 $rgb-brand-primary: 159, 166, 40;
 
+$opacity-hover: 0.15;
+$opacity-active: 0.45;
+
 :root {
   /* Typography colors */
   --color-typo-primary: rgb($rgb-base-primary);
@@ -28,4 +31,11 @@ $rgb-brand-primary: 159, 166, 40;
   --border-radius-sm: 6px;
   --border-radius-md: 16px;
   --border-radius-lg: 20px;
+
+  /* States */
+  --background-color-hover-primary: rgba($rgb-base-muted, $opacity-hover);
+  --background-color-active-primary: rgba($rgb-base-muted, $opacity-active);
+
+  /* Transitions */
+  --transition-hover: 0.25s ease;
 }

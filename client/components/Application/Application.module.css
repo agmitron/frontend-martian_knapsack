@@ -8,3 +8,9 @@
 .content {
   padding: 0 80px 32px;
 }
+
+@media screen and (max-width: 426px) {
+  .content {
+    padding: 0 20px;
+  }
+}

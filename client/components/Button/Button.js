@@ -10,16 +10,18 @@ const propTypes = {
   children: node.isRequired,
   className: string,
   icon: string,
-  size: oneOf(['md']).isRequired,
+  size: oneOf(['md', 'sm']).isRequired,
   theme: oneOf(['accent', 'alert']).isRequired,
   variant: oneOf(['outlined', 'text']).isRequired,
+  isActive: bool,
   isDisabled: bool
 };
 
 const defaultProps = {
   className: null,
   icon: null,
-  isDisabled: false
+  isDisabled: false,
+  isActive: false
 };
 
 const Button = ({
@@ -30,6 +32,7 @@ const Button = ({
   theme,
   variant,
   isDisabled,
+  isActive,
   ...restProps
 }) => (
   <Clickable
@@ -38,7 +41,10 @@ const Button = ({
       styles[`size_${size}`],
       styles[`theme_${theme}`],
       styles[`variant_${variant}`],
-      className
+      className,
+      {
+        [styles.state_active]: isActive
+      }
     )}
     isDisabled={isDisabled}
     {...restProps}

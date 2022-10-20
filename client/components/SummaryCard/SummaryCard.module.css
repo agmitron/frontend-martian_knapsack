@@ -24,6 +24,7 @@
   grid-auto-columns: 1fr;
   grid-template-rows: auto auto;
   row-gap: 8px;
+  column-gap: 10px;
 }
 
 .label {
@@ -37,4 +38,20 @@
   line-height: var(--line-height-text-4xl);
   font-weight: bold;
   color: var(--color-typo-secondary);
+}
+
+/* TODO: reuse skeleton */
+.value.loading {
+  color: transparent;
+  background: linear-gradient(110deg, #b1b0b0 8%, #d4d1d1 18%, #b1b0b0 33%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  padding: 2px 4px;
+  animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
 }

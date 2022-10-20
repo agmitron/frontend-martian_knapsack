@@ -6,7 +6,9 @@ import styles from './Header.module.css';
 
 const Header = () => (
   <header className={styles.root}>
-    <EvilMartiansLogo className={styles.logo} />
+    <div>
+      <EvilMartiansLogo className={styles.logo} />
+    </div>
     <h1 className={styles.title}>Martian Knapsack</h1>
     <div className={styles.value}>
       <HeaderTotalValue />

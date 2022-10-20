@@ -16,3 +16,11 @@
 .value {
   font-weight: bold;
 }
+
+@media screen and (max-width: 426px) {
+  .root {
+    font-size: var(--size-text-sm);
+    line-height: var(--line-height-text-sm);
+    align-items: center;
+  }
+}

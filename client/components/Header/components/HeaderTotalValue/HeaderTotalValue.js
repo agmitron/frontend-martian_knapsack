@@ -7,6 +7,8 @@ import { useApplicationState } from '../../../../contexts/ApplicationStore/Appli
 const HeaderTotalValue = () => {
   const { cargoHoldItems } = useApplicationState();
 
+  console.log({ cargoHoldItems });
+
   const totalValue = useMemo(
     () => cargoHoldItems.reduce((acc, curr) => acc + curr.value, 0),
     [cargoHoldItems]

@@ -4,12 +4,14 @@ import PackageIcon from './assets/package.svg';
 import PlusIcon from './assets/plus.svg';
 import RocketIcon from './assets/rocket.svg';
 import TrashIcon from './assets/trash.svg';
+import ArrowIcon from './assets/arrow.svg';
 
 const MAP_TYPE_TO_ICON = {
   package: PackageIcon,
   plus: PlusIcon,
   rocket: RocketIcon,
-  trash: TrashIcon
+  trash: TrashIcon,
+  arrow: ArrowIcon
 };
 
 const propTypes = {

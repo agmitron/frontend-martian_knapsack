@@ -2,6 +2,7 @@
   position: relative;
   display: block;
   text-align: center;
+  transition: 0.5s ease box-shadow;
 
   &.theme {
     &_accent {
@@ -17,7 +18,7 @@
 
   &.variant {
     &_outlined {
-      box-shadow: inset 0 0 0 1px currentColor;
+      box-shadow: inset 0 0 0 1px currentcolor;
       color: var(--button-primary-color);
       background-color: var(--button-secondary-color);
     }
@@ -25,6 +26,21 @@
     &_text {
       color: var(--button-primary-color);
       background-color: var(--button-secondary-color);
+    }
+
+    &_outlined,
+    &_text {
+      transition: var(--transition-hover) background-color;
+
+      &:hover {
+        background-color: var(--background-color-hover-primary);
+      }
+    }
+  }
+
+  &.state {
+    &_active {
+      background-color: var(--background-color-active-primary);
     }
   }
 
@@ -35,6 +51,17 @@
       font-size: var(--size-text-xl);
       line-height: var(--line-height-text-xl);
     }
+
+    &_sm {
+      padding: 8px;
+      border-radius: var(--border-radius-md);
+      font-size: var(--size-text-md);
+      line-height: var(--line-height-text-sm);
+    }
+  }
+
+  &:active {
+    /* TODO: ripple effect */
   }
 }
 

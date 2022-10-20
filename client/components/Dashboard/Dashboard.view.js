@@ -1,7 +1,17 @@
-import { arrayOf, func, number, object, shape } from 'prop-types';
+import {
+  arrayOf,
+  bool,
+  func,
+  number,
+  object,
+  oneOf,
+  oneOfType,
+  shape
+} from 'prop-types';
 
 import { Button } from '../Button/Button';
 import { CargoCard } from '../CargoCard/CargoCard';
+import { CargoCardSkeleton } from '../CargoCard/CargoCardSkeleton';
 import { SummaryCard } from '../SummaryCard/SummaryCard';
 
 import cargoHoldImageUrl from './assets/cargo-hold.png';
@@ -13,27 +23,31 @@ const propTypes = {
   storage: shape({
     items: arrayOf(object.isRequired).isRequired,
     totalValue: number.isRequired,
-    totalWeight: number.isRequired
+    totalWeight: number.isRequired,
+    loading: bool
   }).isRequired,
   cargoHold: shape({
     items: arrayOf(object.isRequired).isRequired,
     totalValue: number.isRequired,
     totalWeight: number.isRequired,
-    weightLimit: number.isRequired
+    weightLimit: number.isRequired,
+    loading: bool
   }).isRequired,
   onAddNewItem: func.isRequired,
-  onResetItems: func.isRequired
-  // onMoveToCargoHold: func.isRequired,
-  // onMoveToStorage: func.isRequired
+  onResetItems: func.isRequired,
+  filter: oneOfType([null, oneOf(['storage', 'cargoHold'])]),
+  onMoveToCargoHold: func.isRequired,
+  onMoveToStorage: func.isRequired
 };
 
 const DashboardView = ({
   cargoHold,
   storage,
   onAddNewItem,
-  onResetItems
-  // onMoveToCargoHold,
-  // onMoveToStorage
+  onResetItems,
+  filter,
+  onMoveToCargoHold,
+  onMoveToStorage
 }) => (
   <div className={styles.root}>
     <div className={styles.column}>
@@ -44,6 +58,7 @@ const DashboardView = ({
           { label: 'Value', value: storage.totalValue },
           { label: 'Weight', value: storage.totalWeight }
         ]}
+        loading={storage.loading}
       />
       <Button
         variant="outlined"
@@ -54,7 +69,30 @@ const DashboardView = ({
       >
         Add New Cargo
       </Button>
+
+      <div className={styles.filters}>
+        <Button
+          variant="text"
+          theme="accent"
+          size="md"
+          onClick={onAddNewItem}
+          isActive={filter === 'storage'}
+        >
+          Storage
+        </Button>
+        <Button
+          variant="text"
+          theme="accent"
+          size="md"
+          onClick={onAddNewItem}
+          isActive={filter === 'cargoHold'}
+        >
+          Cargo hold
+        </Button>
+      </div>
+
       <ul className={styles.list}>
+        {storage.loading && <CargoCardSkeleton />}
         {storage.items.map(item => (
           <li key={item.id}>
             <CargoCard
@@ -65,6 +103,15 @@ const DashboardView = ({
                 { label: 'Value', value: item.value },
                 { label: 'Weight', value: item.weight }
               ]}
+              actionButton={
+                <Button
+                  icon="package"
+                  variant="outlined"
+                  size="sm"
+                  theme="accent"
+                  onClick={() => onMoveToCargoHold(item.id)}
+                />
+              }
             />
           </li>
         ))}
@@ -82,6 +129,7 @@ const DashboardView = ({
             limit: cargoHold.weightLimit
           }
         ]}
+        loading={cargoHold.loading}
       />
       <Button
         variant="text"
@@ -103,6 +151,15 @@ const DashboardView = ({
                 { label: 'Value', value: item.value },
                 { label: 'Weight', value: item.weight }
               ]}
+              actionButton={
+                <Button
+                  icon="trash"
+                  variant="outlined"
+                  size="sm"
+                  theme="alert"
+                  onClick={() => onMoveToStorage(item.id)}
+                />
+              }
             />
           </li>
         ))}
