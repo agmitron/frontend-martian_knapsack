@@ -12,6 +12,7 @@ import {
 import { Button } from '../Button/Button';
 import { CargoCard } from '../CargoCard/CargoCard';
 import { CargoCardSkeleton } from '../CargoCard/CargoCardSkeleton';
+import { Icon } from '../Icon/Icon';
 import { SummaryCard } from '../SummaryCard/SummaryCard';
 
 import cargoHoldImageUrl from './assets/cargo-hold.png';
@@ -94,7 +95,55 @@ const DashboardView = ({
       <ul className={styles.list}>
         {storage.loading && <CargoCardSkeleton />}
         {storage.items.map(item => (
-          <li key={item.id}>
+          <li
+            key={item.id}
+            tabIndex={-1}
+            role="menuitem"
+            onKeyDown={e => {
+              // TODO: Refactor!!!
+              const element = e.currentTarget;
+              switch (e.key) {
+                case 'ArrowLeft': {
+                  break;
+                }
+                case 'ArrowRight': {
+                  break;
+                }
+                case 'ArrowUp': {
+                  const isFirst = !element.previousSibling;
+                  if (!isFirst) {
+                    element.previousElementSibling.firstChild.focus();
+                  } else {
+                    element.blur();
+                  }
+
+                  break;
+                }
+                case 'ArrowDown': {
+                  const isLast = !element.nextSibling;
+                  if (!isLast) {
+                    element.nextElementSibling.firstChild.focus();
+                  } else {
+                    element.blur();
+                  }
+                  break;
+                }
+                case ' ': {
+                  e.preventDefault();
+                  break;
+                }
+                case 'Enter': {
+                  onMoveToCargoHold(item.id);
+                  const isLast = !element.nextSibling;
+                  if (!isLast) {
+                    element.nextElementSibling.firstChild.focus();
+                  } else {
+                    element.blur();
+                  }
+                }
+              }
+            }}
+          >
             <CargoCard
               title={item.title}
               description={item.description}
@@ -105,12 +154,14 @@ const DashboardView = ({
               ]}
               actionButton={
                 <Button
-                  icon="package"
                   variant="outlined"
                   size="sm"
                   theme="accent"
                   onClick={() => onMoveToCargoHold(item.id)}
-                />
+                  tabIndex="-1"
+                >
+                  <Icon type="package" />
+                </Button>
               }
             />
           </li>
@@ -153,13 +204,16 @@ const DashboardView = ({
               ]}
               actionButton={
                 <Button
-                  icon="trash"
                   variant="outlined"
                   size="sm"
                   theme="alert"
                   onClick={() => onMoveToStorage(item.id)}
-                />
+                >
+                  <Icon type="trash" />
+                </Button>
               }
+              // TODO: refactor
+              onClick={() => onMoveToStorage(item.id)}
             />
           </li>
         ))}

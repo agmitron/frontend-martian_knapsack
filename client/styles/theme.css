@@ -35,6 +35,7 @@ $opacity-active: 0.45;
   /* States */
   --background-color-hover-primary: rgba($rgb-base-muted, $opacity-hover);
   --background-color-active-primary: rgba($rgb-base-muted, $opacity-active);
+  --background-color-active-secondary: rgba($rgb-base-primary, 0.03);
 
   /* Transitions */
   --transition-hover: 0.25s ease;

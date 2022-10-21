@@ -8,14 +8,19 @@
   border-radius: var(--border-radius-md);
   text-align: left;
   cursor: pointer;
-  transition: 0.2s ease box-shadow;
+  transition: 0.1s ease all;
 
-  &:focus-within {
-    border: var(--border-accent);
+  &:focus-within,
+  &:focus-visible {
+    outline: var(--border-accent);
   }
 
   &:hover {
     box-shadow: 0 0 7px -3px rgb(0 0 0 / 71%);
+  }
+
+  &:active {
+    background-color: var(--background-color-active-secondary);
   }
 }
 

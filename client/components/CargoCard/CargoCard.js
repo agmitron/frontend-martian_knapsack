@@ -1,5 +1,13 @@
 import classNames from 'classnames';
-import { arrayOf, bool, element, number, shape, string } from 'prop-types';
+import {
+  arrayOf,
+  bool,
+  element,
+  func,
+  number,
+  shape,
+  string
+} from 'prop-types';
 
 import styles from './CargoCard.module.css';
 
@@ -11,7 +19,9 @@ const propTypes = {
     shape({ label: string.isRequired, value: number.isRequired }).isRequired
   ).isRequired,
   loading: bool,
-  actionButton: element
+  actionButton: element,
+  onClick: func,
+  onKeyDown: func
 };
 
 const CargoCard = ({
@@ -20,9 +30,17 @@ const CargoCard = ({
   imageUrl,
   entries,
   loading,
-  actionButton
+  actionButton,
+  onClick,
+  onKeyDown
 }) => (
-  <div className={styles.root}>
+  <div
+    className={styles.root}
+    onClick={onClick}
+    onKeyDown={onKeyDown}
+    role="menuitem"
+    tabIndex={0}
+  >
     <div
       className={classNames(styles['image-wrapper'], {
         [styles.skeleton]: loading
