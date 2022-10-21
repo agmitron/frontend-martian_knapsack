@@ -8,6 +8,7 @@ import {
   shape,
   string
 } from 'prop-types';
+import { forwardRef } from 'react';
 
 import styles from './CargoCard.module.css';
 
@@ -24,76 +25,83 @@ const propTypes = {
   onKeyDown: func
 };
 
-const CargoCard = ({
-  title,
-  description,
-  imageUrl,
-  entries,
-  loading,
-  actionButton,
-  onClick,
-  onKeyDown
-}) => (
-  <div
-    className={styles.root}
-    onClick={onClick}
-    onKeyDown={onKeyDown}
-    role="menuitem"
-    tabIndex={0}
-  >
+const CargoCard = forwardRef(
+  (
+    {
+      title,
+      description,
+      imageUrl,
+      entries,
+      loading,
+      actionButton,
+      onClick,
+      onKeyDown
+    },
+    ref
+  ) => (
     <div
-      className={classNames(styles['image-wrapper'], {
-        [styles.skeleton]: loading
-      })}
+      className={styles.root}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      role="menuitem"
+      tabIndex={0}
+      ref={ref}
     >
-      <img
-        className={classNames(styles.image, {
-          [styles.loading]: loading
-        })}
-        src={imageUrl}
-        alt={title}
-        height="116"
-        width="116"
-      />
-    </div>
-    <div className={styles.body}>
-      <p
-        className={classNames(styles.title, {
-          [styles.skeleton]: loading,
-          [styles.loading]: loading
+      <div
+        className={classNames(styles['image-wrapper'], {
+          [styles.skeleton]: loading
         })}
       >
-        {title}
-      </p>
-      {description && (
+        <img
+          className={classNames(styles.image, {
+            [styles.loading]: loading
+          })}
+          src={imageUrl}
+          alt={title}
+          height="116"
+          width="116"
+        />
+      </div>
+      <div className={styles.body}>
         <p
-          className={classNames(styles.description, {
+          className={classNames(styles.title, {
             [styles.skeleton]: loading,
             [styles.loading]: loading
           })}
         >
-          {description}
+          {title}
         </p>
-      )}
-      <dl className={styles.list}>
-        {entries.map(entry => (
-          <div
-            key={entry.label}
-            className={classNames(styles.item, {
+        {description && (
+          <p
+            className={classNames(styles.description, {
               [styles.skeleton]: loading,
               [styles.loading]: loading
             })}
           >
-            <dt className={styles.label}>{entry.label}</dt>
-            <dd className={classNames(styles.value)}>{entry.value}</dd>
-          </div>
-        ))}
-      </dl>
+            {description}
+          </p>
+        )}
+        <dl className={styles.list}>
+          {entries.map(entry => (
+            <div
+              key={entry.label}
+              className={classNames(styles.item, {
+                [styles.skeleton]: loading,
+                [styles.loading]: loading
+              })}
+            >
+              <dt className={styles.label}>{entry.label}</dt>
+              <dd className={classNames(styles.value)}>{entry.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div className={styles.controls}>{actionButton}</div>
     </div>
-    <div className={styles.controls}>{actionButton}</div>
-  </div>
+  )
 );
 
 CargoCard.propTypes = propTypes;
+CargoCard.displayName = 'CargoCard';
 
 export { CargoCard };

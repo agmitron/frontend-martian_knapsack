@@ -1,6 +1,5 @@
 import { arrayOf, bool, func, number, object, oneOf, shape } from 'prop-types';
-import { useRef } from 'react';
-import { noop } from '../../utils';
+import { useEffect, useState } from 'react';
 
 import { Button } from '../Button/Button';
 import { CargoCard } from '../CargoCard/CargoCard';
@@ -45,48 +44,6 @@ function bindKeyboard(keyHandlerMapping) {
   };
 }
 
-function shiftFocus($current, $next) {
-  const isEdge = !$next;
-
-  if (isEdge) {
-    $current.blur();
-  } else {
-    $next.firstChild.focus();
-  }
-}
-
-const makeColumnShortcuts = ({
-  Enter = noop,
-  ArrowRight = noop,
-  ArrowLeft = noop,
-  ArrowDown = noop,
-  ArrowUp = noop
-}) =>
-  bindKeyboard({
-    ArrowUp: e => {
-      const $current = e.currentTarget;
-      const $prev = $current.previousElementSibling;
-      ArrowUp();
-      shiftFocus($current, $prev);
-    },
-    ArrowDown: e => {
-      const $current = e.currentTarget;
-      const $next = $current.nextElementSibling;
-      ArrowDown();
-      shiftFocus($current, $next);
-    },
-    Enter: e => {
-      const $current = e.currentTarget;
-      const $next = $current.nextElementSibling;
-      const $prev = $current.previousElementSibling;
-      e.preventDefault();
-      Enter();
-      shiftFocus($current, $next || $prev);
-    },
-    ArrowLeft,
-    ArrowRight
-  });
-
 const DashboardView = ({
   cargoHold,
   storage,
@@ -96,8 +53,23 @@ const DashboardView = ({
   onMoveToCargoHold,
   onMoveToStorage
 }) => {
-  const storageColumnRef = useRef();
-  const cargoHoldColumnRef = useRef();
+  const [selectedCard, setSelectedCard] = useState([]); // [columnIndex, cardIndex]
+  const storageCards = []; // TODO: FIX THIS CRUTCH!!!
+  const cargoHoldCards = []; // TODO: FIX THIS CRUTCH!!!
+
+  useEffect(() => {
+    const [columnIndex, cardIndex] = selectedCard;
+    const columns = [storageCards, cargoHoldCards];
+
+    const column = columns.at(columnIndex);
+    const neighbour = column.at(cardIndex);
+    const firstCard = column.at(0);
+    const focusElement = neighbour || firstCard;
+
+    if (focusElement) {
+      focusElement.focus();
+    }
+  }, [cargoHoldCards, selectedCard, storageCards]);
 
   return (
     <div className={styles.root}>
@@ -142,17 +114,21 @@ const DashboardView = ({
           </Button>
         </div>
 
-        <ul className={styles.list} ref={storageColumnRef}>
+        <ul className={styles.list}>
           {storage.loading && <CargoCardSkeleton />}
-          {storage.items.map(item => (
+          {storage.items.map((item, i) => (
             <li
               key={item.id}
               tabIndex={-1}
               role="menuitem"
-              onKeyDown={makeColumnShortcuts({
-                Enter: () => onMoveToCargoHold(item.id),
-                ArrowRight: () =>
-                  cargoHoldColumnRef.current.firstChild.firstChild.focus() // TODO: refactor
+              onKeyDown={bindKeyboard({
+                Enter: () => {
+                  onMoveToCargoHold(item.id);
+                  setSelectedCard([0, i]);
+                },
+                ArrowRight: () => setSelectedCard([1, i]),
+                ArrowUp: () => setSelectedCard([0, i - 1]),
+                ArrowDown: () => setSelectedCard([0, i + 1])
               })}
             >
               <CargoCard
@@ -174,6 +150,7 @@ const DashboardView = ({
                     <Icon type="package" />
                   </Button>
                 }
+                ref={element => storageCards.push(element)}
               />
             </li>
           ))}
@@ -202,22 +179,27 @@ const DashboardView = ({
         >
           Clear All
         </Button>
-        <ul className={styles.list} ref={cargoHoldColumnRef}>
-          {cargoHold.items.map(item => (
+        <ul className={styles.list}>
+          {cargoHold.items.map((item, i) => (
             <li
               key={item.id}
               tabIndex={-1}
               role="menuitem"
-              onKeyDown={makeColumnShortcuts({
-                Enter: () => onMoveToStorage(item.id),
-                ArrowLeft: () =>
-                  storageColumnRef.current.firstChild.firstChild.focus() // TODO: refactor
+              onKeyDown={bindKeyboard({
+                Enter: () => {
+                  onMoveToStorage(item.id);
+                  setSelectedCard([1, i]);
+                },
+                ArrowLeft: () => setSelectedCard([0, i]),
+                ArrowUp: () => setSelectedCard([1, i - 1]),
+                ArrowDown: () => setSelectedCard([1, i + 1])
               })}
             >
               <CargoCard
                 title={item.title}
                 description={item.description}
                 imageUrl={item.imageUrl}
+                ref={element => cargoHoldCards.push(element)}
                 entries={[
                   { label: 'Value', value: item.value },
                   { label: 'Weight', value: item.weight }
