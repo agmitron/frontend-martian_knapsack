@@ -16,12 +16,6 @@
   row-gap: 24px;
 }
 
-.filters {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 10px;
-}
-
 @media screen and (min-width: 426px) {
   .filters {
     display: none;
@@ -31,5 +25,9 @@
 @media screen and (max-width: 426px) {
   .root {
     grid-template-columns: 1fr;
+  }
+
+  .column.hidden {
+    display: none;
   }
 }

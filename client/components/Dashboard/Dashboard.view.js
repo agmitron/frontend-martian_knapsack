@@ -1,9 +1,11 @@
+import classNames from 'classnames';
 import { arrayOf, bool, func, number, object, oneOf, shape } from 'prop-types';
 import { useState } from 'react';
 
 import { Button } from '../Button/Button';
 import { CargoCard } from '../CargoCard/CargoCard';
 import { CargoCardSkeleton } from '../CargoCard/CargoCardSkeleton';
+import { Filter, FILTERS_ENUM } from '../Filter/Filter';
 import { Icon } from '../Icon/Icon';
 import { SummaryCard } from '../SummaryCard/SummaryCard';
 
@@ -64,15 +66,26 @@ const DashboardView = ({
   storage,
   onAddNewItem,
   onResetItems,
-  filter,
   onMoveToCargoHold,
   onMoveToStorage
 }) => {
   const [[columnIndex, cardIndex], setSelectedCard] = useState([null, null]);
+  const [filter, setFilter] = useState(FILTERS_ENUM.storage);
+
+  const blur = () => setSelectedCard([null, null]);
+  const switchFocusedColumn = (columnIndex, cardIndex, lastCardIndex) =>
+    setSelectedCard([
+      columnIndex,
+      cardIndex > lastCardIndex ? lastCardIndex : cardIndex
+    ]);
 
   return (
     <div className={styles.root}>
-      <div className={styles.column}>
+      <div
+        className={classNames(styles.column, {
+          [styles.hidden]: filter !== FILTERS_ENUM.storage
+        })}
+      >
         <SummaryCard
           title="Storage"
           imageUrl={storageImageUrl}
@@ -83,6 +96,7 @@ const DashboardView = ({
           loading={storage.loading}
         />
         <Button
+          className={styles.button}
           variant="outlined"
           theme="accent"
           size="md"
@@ -91,28 +105,11 @@ const DashboardView = ({
         >
           Add New Cargo
         </Button>
-
-        <div className={styles.filters}>
-          <Button
-            variant="text"
-            theme="accent"
-            size="md"
-            onClick={onAddNewItem}
-            isActive={filter === 'storage'}
-          >
-            Storage
-          </Button>
-          <Button
-            variant="text"
-            theme="accent"
-            size="md"
-            onClick={onAddNewItem}
-            isActive={filter === 'cargoHold'}
-          >
-            Cargo hold
-          </Button>
-        </div>
-
+        <Filter
+          activeFilter={filter}
+          onChange={setFilter}
+          className={styles.filters}
+        />
         <ul className={styles.list}>
           {storage.loading && <CargoCardSkeleton />}
           {storage.items.map((item, i) => (
@@ -128,7 +125,8 @@ const DashboardView = ({
                     shiftFocusToLast(i, storage.items.length - 1)
                   ]);
                 },
-                ArrowRight: () => setSelectedCard([1, i]),
+                ArrowRight: () =>
+                  switchFocusedColumn(1, i, cargoHold.items.length - 1),
                 ArrowUp: () =>
                   setSelectedCard([
                     0,
@@ -138,7 +136,8 @@ const DashboardView = ({
                   setSelectedCard([
                     0,
                     shiftFocusDown(i, storage.items.length - 1)
-                  ])
+                  ]),
+                Escape: blur
               })}
             >
               <CargoCard
@@ -166,7 +165,12 @@ const DashboardView = ({
           ))}
         </ul>
       </div>
-      <div className={styles.column}>
+
+      <div
+        className={classNames(styles.column, {
+          [styles.hidden]: filter !== FILTERS_ENUM.cargoHold
+        })}
+      >
         <SummaryCard
           title="Cargo Hold"
           imageUrl={cargoHoldImageUrl}
@@ -181,6 +185,7 @@ const DashboardView = ({
           loading={cargoHold.loading}
         />
         <Button
+          className={styles.button}
           variant="text"
           theme="alert"
           size="md"
@@ -189,6 +194,11 @@ const DashboardView = ({
         >
           Clear All
         </Button>
+        <Filter
+          activeFilter={filter}
+          onChange={setFilter}
+          className={styles.filters}
+        />
         <ul className={styles.list}>
           {cargoHold.items.map((item, i) => (
             <li
@@ -203,7 +213,8 @@ const DashboardView = ({
                     shiftFocusToLast(i, cargoHold.items.length - 1)
                   ]);
                 },
-                ArrowLeft: () => setSelectedCard([0, i]),
+                ArrowLeft: () =>
+                  switchFocusedColumn(0, i, storage.items.length - 1),
                 ArrowUp: () =>
                   setSelectedCard([
                     1,
@@ -213,7 +224,8 @@ const DashboardView = ({
                   setSelectedCard([
                     1,
                     shiftFocusDown(i, cargoHold.items.length - 1)
-                  ])
+                  ]),
+                Escape: blur
               })}
             >
               <CargoCard
