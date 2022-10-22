@@ -8,7 +8,7 @@ import {
   shape,
   string
 } from 'prop-types';
-import { forwardRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 import styles from './CargoCard.module.css';
 
@@ -22,23 +22,32 @@ const propTypes = {
   loading: bool,
   actionButton: element,
   onClick: func,
-  onKeyDown: func
+  onKeyDown: func,
+  focused: bool
 };
 
-const CargoCard = forwardRef(
-  (
-    {
-      title,
-      description,
-      imageUrl,
-      entries,
-      loading,
-      actionButton,
-      onClick,
-      onKeyDown
-    },
-    ref
-  ) => (
+const CargoCard = ({
+  title,
+  description,
+  imageUrl,
+  entries,
+  loading,
+  actionButton,
+  onClick,
+  onKeyDown,
+  focused
+}) => {
+  const ref = useRef();
+
+  useLayoutEffect(() => {
+    if (focused) {
+      ref.current.focus();
+    } else {
+      ref.current.blur();
+    }
+  }, [focused]);
+
+  return (
     <div
       className={styles.root}
       onClick={onClick}
@@ -98,10 +107,9 @@ const CargoCard = forwardRef(
       </div>
       <div className={styles.controls}>{actionButton}</div>
     </div>
-  )
-);
+  );
+};
 
 CargoCard.propTypes = propTypes;
-CargoCard.displayName = 'CargoCard';
 
 export { CargoCard };

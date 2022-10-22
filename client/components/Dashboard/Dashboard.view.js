@@ -1,5 +1,5 @@
 import { arrayOf, bool, func, number, object, oneOf, shape } from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '../Button/Button';
 import { CargoCard } from '../CargoCard/CargoCard';
@@ -44,6 +44,21 @@ function bindKeyboard(keyHandlerMapping) {
   };
 }
 
+function shiftFocusUp(i, edge) {
+  const prev = i - 1;
+  return prev < 0 ? edge : prev;
+}
+
+function shiftFocusDown(i, edge) {
+  const next = i + 1;
+  return next > edge ? 0 : next;
+}
+
+function shiftFocusToLast(i, last) {
+  const prev = i - 1;
+  return i === last ? prev : i;
+}
+
 const DashboardView = ({
   cargoHold,
   storage,
@@ -53,23 +68,7 @@ const DashboardView = ({
   onMoveToCargoHold,
   onMoveToStorage
 }) => {
-  const [selectedCard, setSelectedCard] = useState([]); // [columnIndex, cardIndex]
-  const storageCards = []; // TODO: FIX THIS CRUTCH!!!
-  const cargoHoldCards = []; // TODO: FIX THIS CRUTCH!!!
-
-  useEffect(() => {
-    const [columnIndex, cardIndex] = selectedCard;
-    const columns = [storageCards, cargoHoldCards];
-
-    const column = columns.at(columnIndex);
-    const neighbour = column.at(cardIndex);
-    const firstCard = column.at(0);
-    const focusElement = neighbour || firstCard;
-
-    if (focusElement) {
-      focusElement.focus();
-    }
-  }, [cargoHoldCards, selectedCard, storageCards]);
+  const [[columnIndex, cardIndex], setSelectedCard] = useState([null, null]);
 
   return (
     <div className={styles.root}>
@@ -124,11 +123,22 @@ const DashboardView = ({
               onKeyDown={bindKeyboard({
                 Enter: () => {
                   onMoveToCargoHold(item.id);
-                  setSelectedCard([0, i]);
+                  setSelectedCard([
+                    0,
+                    shiftFocusToLast(i, storage.items.length - 1)
+                  ]);
                 },
                 ArrowRight: () => setSelectedCard([1, i]),
-                ArrowUp: () => setSelectedCard([0, i - 1]),
-                ArrowDown: () => setSelectedCard([0, i + 1])
+                ArrowUp: () =>
+                  setSelectedCard([
+                    0,
+                    shiftFocusUp(i, storage.items.length - 1)
+                  ]),
+                ArrowDown: () =>
+                  setSelectedCard([
+                    0,
+                    shiftFocusDown(i, storage.items.length - 1)
+                  ])
               })}
             >
               <CargoCard
@@ -150,7 +160,7 @@ const DashboardView = ({
                     <Icon type="package" />
                   </Button>
                 }
-                ref={element => storageCards.push(element)}
+                focused={columnIndex === 0 && cardIndex === i}
               />
             </li>
           ))}
@@ -188,18 +198,28 @@ const DashboardView = ({
               onKeyDown={bindKeyboard({
                 Enter: () => {
                   onMoveToStorage(item.id);
-                  setSelectedCard([1, i]);
+                  setSelectedCard([
+                    1,
+                    shiftFocusToLast(i, cargoHold.items.length - 1)
+                  ]);
                 },
                 ArrowLeft: () => setSelectedCard([0, i]),
-                ArrowUp: () => setSelectedCard([1, i - 1]),
-                ArrowDown: () => setSelectedCard([1, i + 1])
+                ArrowUp: () =>
+                  setSelectedCard([
+                    1,
+                    shiftFocusUp(i, cargoHold.items.length - 1)
+                  ]),
+                ArrowDown: () =>
+                  setSelectedCard([
+                    1,
+                    shiftFocusDown(i, cargoHold.items.length - 1)
+                  ])
               })}
             >
               <CargoCard
                 title={item.title}
                 description={item.description}
                 imageUrl={item.imageUrl}
-                ref={element => cargoHoldCards.push(element)}
                 entries={[
                   { label: 'Value', value: item.value },
                   { label: 'Weight', value: item.weight }
@@ -214,6 +234,7 @@ const DashboardView = ({
                     <Icon type="trash" />
                   </Button>
                 }
+                focused={columnIndex === 1 && cardIndex === i}
               />
             </li>
           ))}
