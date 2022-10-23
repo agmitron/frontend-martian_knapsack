@@ -1,4 +1,8 @@
 :root {
+  /* XS */
+  --size-text-xs: 13px;
+  --line-height-text-xs: 13px;
+
   /* SM */
   --size-text-sm: 16px;
   --line-height-text-sm: 16px;

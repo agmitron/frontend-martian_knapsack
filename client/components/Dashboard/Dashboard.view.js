@@ -72,7 +72,11 @@ const DashboardView = ({
   const [[columnIndex, cardIndex], setSelectedCard] = useState([null, null]);
   const [filter, setFilter] = useState(FILTERS_ENUM.storage);
 
-  const blur = () => setSelectedCard([null, null]);
+  const blur = () => {
+    setSelectedCard([null, null]);
+    document.activeElement.blur();
+  };
+
   const switchFocusedColumn = (columnIndex, cardIndex, lastCardIndex) =>
     setSelectedCard([
       columnIndex,
@@ -206,6 +210,7 @@ const DashboardView = ({
               tabIndex={-1}
               role="menuitem"
               onKeyDown={bindKeyboard({
+                // TODO: refactor!
                 Enter: () => {
                   onMoveToStorage(item.id);
                   setSelectedCard([

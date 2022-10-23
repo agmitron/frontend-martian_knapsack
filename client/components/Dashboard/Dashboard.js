@@ -31,6 +31,7 @@ const Dashboard = () => {
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
 
+  // TODO: probably move to context store
   const storage = useMemo(
     () => ({
       items: storageItems,
