@@ -12,7 +12,7 @@ const Application = () => {
 
   useEffect(() => {
     const toggleHeaderStickiness = () => {
-      setIsHeaderSticky(window.scrollY >= 300);
+      setIsHeaderSticky(window.scrollY >= 150);
     };
 
     window.addEventListener('scroll', toggleHeaderStickiness);
