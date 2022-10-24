@@ -107,7 +107,7 @@ const DashboardView = ({
               actionButton={
                 <Button
                   variant="outlined"
-                  size="sm"
+                  size="md"
                   theme="accent"
                   onClick={() => onMoveToCargoHold(item.id)}
                   tabIndex="-1"
@@ -178,7 +178,7 @@ const DashboardView = ({
               actionButton={
                 <Button
                   variant="outlined"
-                  size="sm"
+                  size="md"
                   theme="alert"
                   onClick={() => onMoveToStorage(item.id)}
                   tabIndex="-1"

@@ -14,14 +14,16 @@
   &:focus-within,
   &:focus-visible {
     outline: var(--border-accent);
+    background-color: var(--background-color-active-secondary);
   }
 
   &:hover {
-    box-shadow: 0 0 7px -3px rgb(0 0 0 / 71%);
+    box-shadow: 0 0 7px -3px rgb(0 0 0 / 70%);
   }
 
   &:active {
     background-color: var(--background-color-active-secondary);
+    box-shadow: 0 0 4px -2px rgb(0 0 0 / 70%);
   }
 }
 

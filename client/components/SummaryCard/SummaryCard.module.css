@@ -55,3 +55,20 @@
     background-position-x: -200%;
   }
 }
+
+@media screen and (max-width: 426px) {
+  .title {
+    font-size: var(--size-text-xl);
+    line-height: var(--line-height-text-xl);
+  }
+
+  .label {
+    font-size: var(--size-text-sm);
+    line-height: var(--line-height-text-sm);
+  }
+
+  .value {
+    font-size: var(--size-text-2xl);
+    line-height: var(--line-height-text-2xl);
+  }
+}
