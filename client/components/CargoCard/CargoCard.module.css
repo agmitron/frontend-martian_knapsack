@@ -111,3 +111,42 @@
     background-position-x: -200%;
   }
 }
+
+@media screen and (max-width: 1025px) {
+  .root {
+    grid-template-areas:
+      'image controls'
+      'body body';
+    row-gap: 20px;
+  }
+
+  .controls {
+    grid-area: controls;
+    justify-self: end;
+  }
+
+  .body {
+    grid-area: body;
+  }
+
+  .image {
+    grid-area: image;
+  }
+}
+
+@media screen and (max-width: 426px) {
+  .title {
+    font-size: var(--size-text-lg);
+    line-height: var(--line-height-text-lg);
+  }
+
+  .description {
+    font-size: var(--size-text-sm);
+    line-height: var(--line-height-text-sm);
+  }
+
+  .item {
+    font-size: var(--size-text-xs);
+    line-height: var(--line-height-text-xs);
+  }
+}

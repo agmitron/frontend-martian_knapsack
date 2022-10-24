@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { Route, Switch } from 'wouter';
 
@@ -23,7 +24,11 @@ const Application = () => {
   }, []);
 
   return (
-    <div className={styles.root}>
+    <div
+      className={classNames(styles.root, {
+        [styles['with-gutter']]: isHeaderSticky
+      })}
+    >
       <Header isSticky={isHeaderSticky} />
       <main className={styles.content}>
         <Switch>

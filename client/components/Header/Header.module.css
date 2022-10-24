@@ -9,6 +9,7 @@
 }
 
 .root.sticky {
+  top: 0;
   position: fixed;
 }
 
@@ -33,7 +34,7 @@
   margin-left: auto;
 }
 
-@media screen and (max-width: 426px) {
+@media screen and (max-width: 769px) {
   .root {
     padding: 8px 20px;
   }

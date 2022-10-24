@@ -9,8 +9,18 @@
   padding: 0 80px 32px;
 }
 
+.with-gutter {
+  padding-top: 68px;
+}
+
 @media screen and (max-width: 426px) {
   .content {
-    padding: 0 20px;
+    padding: 0 20px 40px;
+  }
+}
+
+@media screen and (max-width: 769px) {
+  .content {
+    padding: 0 45px 40px;
   }
 }

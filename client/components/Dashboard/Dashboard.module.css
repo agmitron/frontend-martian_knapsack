@@ -17,18 +17,18 @@
   row-gap: 24px;
 }
 
-@media screen and (min-width: 426px) {
-  .filters {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 426px) {
+@media screen and (max-width: 769px) {
   .root {
     grid-template-columns: 1fr;
   }
 
   .column.hidden {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .filters {
     display: none;
   }
 }
