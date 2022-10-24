@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { DashboardView } from './Dashboard.view';
 import { FILTERS_ENUM } from '../Filter/Filter';
@@ -29,12 +29,15 @@ const Dashboard = () => {
     columnIndex: null
   });
 
+  const [isAddNewCargoPopupOpen, setIsAddNewCargoPopupOpen] = useState(false);
   const [filter, setFilter] = useState(FILTERS_ENUM.storage);
 
   const { error, loading } = useFetchInitialData();
 
   const { storageItems, cargoHoldItems, cargoHoldWeightLimit } =
     useApplicationState();
+
+  console.log({ storageItems, cargoHoldItems });
 
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
@@ -132,6 +135,19 @@ const Dashboard = () => {
     ]
   );
 
+  const closePopup = useCallback(
+    e => e.key === 'Escape' && setIsAddNewCargoPopupOpen(false),
+    []
+  );
+
+  useEffect(() => {
+    if (isAddNewCargoPopupOpen) {
+      window.addEventListener('keydown', closePopup);
+    } else {
+      window.removeEventListener('keydown', closePopup);
+    }
+  }, [closePopup, isAddNewCargoPopupOpen]);
+
   // TODO: handle error, show better UI
   if (error) return <h1>Something went wrong.</h1>;
 
@@ -139,8 +155,7 @@ const Dashboard = () => {
     <DashboardView
       storage={storage}
       cargoHold={cargoHold}
-      // TODO: Should pass modal opener handler
-      onAddNewItem={() => {}}
+      onAddNewItem={() => setIsAddNewCargoPopupOpen(true)}
       onResetItems={resetItems}
       onMoveToCargoHold={moveItemToCargoHold}
       onMoveToStorage={moveItemToStorage}
@@ -148,6 +163,8 @@ const Dashboard = () => {
       onCargoCardFocus={setFocusedCargoCard}
       filter={filter}
       onFilterChange={setFilter}
+      closeAddNewCargoPopup={() => setIsAddNewCargoPopupOpen(false)}
+      isAddNewCargoPopupOpen={isAddNewCargoPopupOpen}
     />
   );
 };

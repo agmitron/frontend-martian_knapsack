@@ -26,6 +26,7 @@ $opacity-active: 0.45;
   --border-primary: 1px solid rgb($rgb-base-muted);
   --border-secondary: 1px solid rgba($rgb-base-muted, 0.5);
   --border-accent: 1px solid rgb($rgb-brand-primary);
+  --border-alert: 1px solid var(--color-status-alert);
 
   /* Border radius */
   --border-radius-sm: 6px;
@@ -36,7 +37,9 @@ $opacity-active: 0.45;
   --background-color-hover-primary: rgba($rgb-base-muted, $opacity-hover);
   --background-color-active-primary: rgba($rgb-base-muted, $opacity-active);
   --background-color-active-secondary: rgba($rgb-base-primary, 0.03);
+  --background-color-disabled-primary: rgba($rgb-base-muted, 0.5);
 
   /* Transitions */
   --transition-hover: 0.25s ease;
+  --transition-focus: 0.5s ease;
 }

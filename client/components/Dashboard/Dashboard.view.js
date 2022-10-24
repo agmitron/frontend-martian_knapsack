@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { arrayOf, bool, func, number, object, oneOf, shape } from 'prop-types';
+import { AddNewCargoPopup } from '../AddNewCargoPopup/AddNewCargoPopup';
 
 import { Button } from '../Button/Button';
 import { CargoCard } from '../CargoCard/CargoCard';
@@ -37,7 +38,9 @@ const propTypes = {
     cardIndex: number,
     columnIndex: number
   }).isRequired,
-  onCargoCardFocus: func.isRequired
+  onCargoCardFocus: func.isRequired,
+  isAddNewCargoPopupOpen: bool.isRequired,
+  closeAddNewCargoPopup: func.isRequired
 };
 
 const DashboardView = ({
@@ -50,7 +53,9 @@ const DashboardView = ({
   focusedCargoCard,
   onCargoCardFocus,
   filter,
-  onFilterChange
+  onFilterChange,
+  isAddNewCargoPopupOpen,
+  closeAddNewCargoPopup
 }) => (
   <div className={styles.root}>
     <div
@@ -191,6 +196,10 @@ const DashboardView = ({
         ))}
       </ul>
     </div>
+    <AddNewCargoPopup
+      open={isAddNewCargoPopupOpen}
+      onClose={closeAddNewCargoPopup}
+    />
   </div>
 );
 

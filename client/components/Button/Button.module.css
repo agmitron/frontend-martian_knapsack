@@ -36,6 +36,10 @@
         background-color: var(--background-color-hover-primary);
       }
 
+      &:focus {
+        background-color: var(--background-color-active-secondary);
+      }
+
       &:active {
         background-color: var(--background-color-active-primary);
       }
@@ -45,6 +49,17 @@
   &.state {
     &_active {
       background-color: var(--background-color-active-primary);
+    }
+
+    &_disabled {
+      background-color: var(--background-color-disabled-primary);
+      border: none;
+      color: white;
+
+      &:hover {
+        background-color: var(--background-color-disabled-primary);
+        border: none;
+      }
     }
   }
 
@@ -62,10 +77,6 @@
       font-size: var(--size-text-md);
       line-height: var(--line-height-text-sm);
     }
-  }
-
-  &:active {
-    /* TODO: ripple effect */
   }
 }
 

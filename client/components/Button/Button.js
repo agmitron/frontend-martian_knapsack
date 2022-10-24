@@ -43,7 +43,8 @@ const Button = ({
       styles[`variant_${variant}`],
       className,
       {
-        [styles.state_active]: isActive
+        [styles.state_active]: isActive,
+        [styles.state_disabled]: isDisabled
       }
     )}
     isDisabled={isDisabled}
