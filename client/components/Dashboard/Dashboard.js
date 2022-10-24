@@ -1,13 +1,14 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { DashboardView } from './Dashboard.view';
-
+import { FILTERS_ENUM } from '../Filter/Filter';
 import {
   useApplicationActions,
   useApplicationState
 } from '../../contexts/ApplicationStore/ApplicationStore';
 
 import { useFetchInitialData } from '../../__mock_data__/useFetchInitialData';
+import { bindKeyboardShortcuts, focusControls } from './utils';
 
 function getComputedValues(items) {
   return items.reduce(
@@ -23,6 +24,13 @@ function getComputedValues(items) {
 }
 
 const Dashboard = () => {
+  const [focusedCargoCard, setFocusedCargoCard] = useState({
+    cardIndex: null,
+    columnIndex: null
+  });
+
+  const [filter, setFilter] = useState(FILTERS_ENUM.storage);
+
   const { error, loading } = useFetchInitialData();
 
   const { storageItems, cargoHoldItems, cargoHoldWeightLimit } =
@@ -31,24 +39,97 @@ const Dashboard = () => {
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
 
-  // TODO: probably move to context store
+  const lastStorageCardIndex = useMemo(
+    () => storageItems.length - 1,
+    [storageItems]
+  );
+
+  const lastCargoHoldCardIndex = useMemo(
+    () => cargoHoldItems.length - 1,
+    [cargoHoldItems]
+  );
+
+  const commonCargoCardShortcuts = useMemo(
+    () => ({
+      Escape: () => setFocusedCargoCard(focusControls.blur)
+    }),
+    []
+  );
+
   const storage = useMemo(
     () => ({
+      loading,
       items: storageItems,
-      ...getComputedValues(storageItems),
-      loading
+      onKeyDown: bindKeyboardShortcuts({
+        ...commonCargoCardShortcuts,
+        ArrowRight: () =>
+          setFocusedCargoCard(prev =>
+            focusControls.right(prev, lastCargoHoldCardIndex)
+          ),
+        ArrowUp: () =>
+          setFocusedCargoCard(prev =>
+            focusControls.up(prev, lastStorageCardIndex)
+          ),
+        ArrowDown: () =>
+          setFocusedCargoCard(prev =>
+            focusControls.down(prev, lastStorageCardIndex)
+          ),
+        Enter: (_, item) => {
+          moveItemToCargoHold(item.id);
+          setFocusedCargoCard(prev =>
+            focusControls.slide(prev, lastStorageCardIndex)
+          );
+        }
+      }),
+      ...getComputedValues(storageItems)
     }),
-    [storageItems, loading]
+    [
+      loading,
+      storageItems,
+      commonCargoCardShortcuts,
+      lastCargoHoldCardIndex,
+      lastStorageCardIndex,
+      moveItemToCargoHold
+    ]
   );
 
   const cargoHold = useMemo(
     () => ({
+      loading,
       items: cargoHoldItems,
       weightLimit: cargoHoldWeightLimit,
-      ...getComputedValues(cargoHoldItems),
-      loading
+      onKeyDown: bindKeyboardShortcuts({
+        ...commonCargoCardShortcuts,
+        ArrowLeft: () =>
+          setFocusedCargoCard(prev =>
+            focusControls.left(prev, lastStorageCardIndex)
+          ),
+        ArrowUp: () =>
+          setFocusedCargoCard(prev =>
+            focusControls.up(prev, lastCargoHoldCardIndex)
+          ),
+        ArrowDown: () =>
+          setFocusedCargoCard(prev =>
+            focusControls.down(prev, lastCargoHoldCardIndex)
+          ),
+        Enter: (_, item) => {
+          moveItemToStorage(item.id);
+          setFocusedCargoCard(prev =>
+            focusControls.slide(prev, lastCargoHoldCardIndex)
+          );
+        }
+      }),
+      ...getComputedValues(cargoHoldItems)
     }),
-    [cargoHoldWeightLimit, cargoHoldItems, loading]
+    [
+      loading,
+      cargoHoldItems,
+      cargoHoldWeightLimit,
+      commonCargoCardShortcuts,
+      lastStorageCardIndex,
+      lastCargoHoldCardIndex,
+      moveItemToStorage
+    ]
   );
 
   // TODO: handle error, show better UI
@@ -63,7 +144,10 @@ const Dashboard = () => {
       onResetItems={resetItems}
       onMoveToCargoHold={moveItemToCargoHold}
       onMoveToStorage={moveItemToStorage}
-      filter="storage"
+      focusedCargoCard={focusedCargoCard}
+      onCargoCardFocus={setFocusedCargoCard}
+      filter={filter}
+      onFilterChange={setFilter}
     />
   );
 };

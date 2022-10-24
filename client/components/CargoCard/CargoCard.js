@@ -23,7 +23,8 @@ const propTypes = {
   actionButton: element,
   onClick: func,
   onKeyDown: func,
-  focused: bool
+  focused: bool,
+  onFocus: func
 };
 
 const CargoCard = ({
@@ -35,7 +36,8 @@ const CargoCard = ({
   actionButton,
   onClick,
   onKeyDown,
-  focused
+  focused,
+  onFocus
 }) => {
   const ref = useRef();
 
@@ -55,6 +57,7 @@ const CargoCard = ({
       role="menuitem"
       tabIndex={0}
       ref={ref}
+      onFocus={onFocus}
     >
       <div
         className={classNames(styles['image-wrapper'], {
