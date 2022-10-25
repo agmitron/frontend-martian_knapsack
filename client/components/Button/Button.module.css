@@ -14,6 +14,11 @@
       --button-primary-color: var(--color-status-alert);
       --button-secondary-color: var(--color-bg-primary);
     }
+
+    &_action {
+      --button-primary-color: var(--color-bg-primary);
+      --button-secondary-color: var(--color-status-success);
+    }
   }
 
   &.variant {
@@ -26,6 +31,24 @@
     &_text {
       color: var(--button-primary-color);
       background-color: var(--button-secondary-color);
+    }
+
+    &_filled {
+      color: var(--button-primary-color);
+      background-color: var(--color-status-success);
+      transition: var(--transition-hover) all;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      &:focus {
+        filter: brightness(0.9);
+      }
+
+      &:active {
+        filter: brightness(0.8);
+      }
     }
 
     &_outlined,

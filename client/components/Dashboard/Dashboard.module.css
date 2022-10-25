@@ -17,6 +17,14 @@
   row-gap: 24px;
 }
 
+.launch {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  fill: white;
+  color: white;
+}
+
 @media screen and (max-width: 769px) {
   .root {
     grid-template-columns: 1fr;

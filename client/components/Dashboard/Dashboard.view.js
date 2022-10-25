@@ -88,57 +88,61 @@ const DashboardView = ({
       />
       <ul className={styles.list}>
         {storage.isLoading && <CargoCardSkeleton />}
-        {storage.items.map((item, i) => (
-          <li
-            key={item.id}
-            tabIndex={-1}
-            role="menuitem"
-            onKeyDown={e =>
-              storage.onKeyDown(e, {
-                item,
-                isDisabled:
-                  cargoHold.totalWeight + item.weight > cargoHold.weightLimit
-              })
-            }
-          >
-            <CargoCard
-              title={item.title}
-              description={item.description}
-              imageUrl={item.imageUrl}
-              entries={[
-                { label: 'Value', value: item.value },
-                { label: 'Weight', value: item.weight }
-              ]}
-              actionButton={
-                <Button
-                  variant="outlined"
-                  size="md"
-                  theme="accent"
-                  onClick={() => {
-                    onMoveToCargoHold(item.id);
-                    onCargoCardFocus({ cardIndex: null, columnIndex: null });
-                  }}
-                  onMouseDown={e => e.preventDefault()}
-                  tabIndex="-1"
-                  isDisabled={
+        {!storage.isLoading &&
+          storage.items.map((item, i) => (
+            <li
+              key={item.id}
+              tabIndex={-1}
+              role="menuitem"
+              onKeyDown={e =>
+                storage.onKeyDown(e, {
+                  item,
+                  isDisabled:
                     cargoHold.totalWeight + item.weight > cargoHold.weightLimit
-                  }
-                >
-                  <Icon type="package" />
-                </Button>
+                })
               }
-              isFocused={
-                focusedCargoCard.columnIndex === 0 &&
-                focusedCargoCard.cardIndex === i
-              }
-              onFocus={() => onCargoCardFocus({ cardIndex: i, columnIndex: 0 })}
-              onBlur={() =>
-                onCargoCardFocus({ cardIndex: null, columnIndex: null })
-              }
-              tabIndex={i + i + 1}
-            />
-          </li>
-        ))}
+            >
+              <CargoCard
+                title={item.title}
+                description={item.description}
+                imageUrl={item.imageUrl}
+                entries={[
+                  { label: 'Value', value: item.value },
+                  { label: 'Weight', value: item.weight }
+                ]}
+                actionButton={
+                  <Button
+                    variant="outlined"
+                    size="md"
+                    theme="accent"
+                    onClick={() => {
+                      onMoveToCargoHold(item.id);
+                      onCargoCardFocus({ cardIndex: null, columnIndex: null });
+                    }}
+                    onMouseDown={e => e.preventDefault()}
+                    tabIndex="-1"
+                    isDisabled={
+                      cargoHold.totalWeight + item.weight >
+                      cargoHold.weightLimit
+                    }
+                  >
+                    <Icon type="package" />
+                  </Button>
+                }
+                isFocused={
+                  focusedCargoCard.columnIndex === 0 &&
+                  focusedCargoCard.cardIndex === i
+                }
+                onFocus={() =>
+                  onCargoCardFocus({ cardIndex: i, columnIndex: 0 })
+                }
+                onBlur={() =>
+                  onCargoCardFocus({ cardIndex: null, columnIndex: null })
+                }
+                tabIndex={i + i + 1}
+              />
+            </li>
+          ))}
       </ul>
     </div>
 
@@ -222,6 +226,11 @@ const DashboardView = ({
       </ul>
     </div>
     <AddNewCargoPopup isOpen={isPopupOpen} />
+    <span className={styles.launch}>
+      <Button variant="filled" size="md" theme="action" to="/launch">
+        <Icon type="rocket" />
+      </Button>
+    </span>
   </div>
 );
 

@@ -36,7 +36,6 @@ export function applicationStoreReducer(state, action) {
     }
     case ACTION_TYPES.resetItems: {
       const storageItems = [...state.storageItems, ...state.cargoHoldItems];
-
       return { ...state, storageItems, cargoHoldItems: [] };
     }
     default:

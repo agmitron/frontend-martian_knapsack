@@ -11,8 +11,8 @@ const propTypes = {
   className: string,
   icon: string,
   size: oneOf(['md', 'sm']).isRequired,
-  theme: oneOf(['accent', 'alert']).isRequired,
-  variant: oneOf(['outlined', 'text']).isRequired,
+  theme: oneOf(['accent', 'alert', 'action']).isRequired,
+  variant: oneOf(['filled', 'outlined', 'text']).isRequired,
   isActive: bool,
   isDisabled: bool
 };

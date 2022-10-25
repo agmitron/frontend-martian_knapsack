@@ -21,7 +21,7 @@
   font-weight: normal;
 }
 
-@media screen and (max-width: 426px) {
+@media screen and (max-width: 769px) {
   .root {
     font-size: var(--size-text-sm);
     line-height: var(--line-height-text-sm);
