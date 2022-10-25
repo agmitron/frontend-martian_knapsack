@@ -38,9 +38,7 @@ const propTypes = {
     cardIndex: number,
     columnIndex: number
   }).isRequired,
-  onCargoCardFocus: func.isRequired,
-  isAddNewCargoPopupOpen: bool.isRequired,
-  closeAddNewCargoPopup: func.isRequired
+  onCargoCardFocus: func.isRequired
 };
 
 const DashboardView = ({
@@ -53,9 +51,7 @@ const DashboardView = ({
   focusedCargoCard,
   onCargoCardFocus,
   filter,
-  onFilterChange,
-  isAddNewCargoPopupOpen,
-  closeAddNewCargoPopup
+  onFilterChange
 }) => (
   <div className={styles.root}>
     <div
@@ -217,10 +213,7 @@ const DashboardView = ({
         ))}
       </ul>
     </div>
-    <AddNewCargoPopup
-      open={isAddNewCargoPopupOpen}
-      onClose={closeAddNewCargoPopup}
-    />
+    <AddNewCargoPopup />
   </div>
 );
 

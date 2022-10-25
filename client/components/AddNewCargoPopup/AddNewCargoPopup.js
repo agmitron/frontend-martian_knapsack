@@ -1,7 +1,9 @@
 import { nanoid } from 'nanoid';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useApplicationActions } from '../../contexts/ApplicationStore/ApplicationStore';
+import { POPUPS } from '../../contexts/UIStore/constants';
 import { useForm } from '../../hooks/useForm';
+import { usePopup } from '../../hooks/usePopup';
 import { sleep } from '../../utils';
 import { Button } from '../Button/Button';
 import { Popup, propTypes } from '../Popup/Popup';
@@ -26,11 +28,7 @@ const extractValues = form =>
 
 const AddNewCargoPopup = props => {
   const { addNewItems } = useApplicationActions();
-
-  const onClose = useCallback(() => {
-    reset();
-    props.onClose();
-  }, [props, reset]);
+  const popup = usePopup();
 
   const { reset, loading, error, form, invalid, onSubmit, onChange } = useForm(
     emptyForm,
@@ -48,7 +46,6 @@ const AddNewCargoPopup = props => {
           // Server imitation
           await sleep(2000);
           addNewItems([item]);
-          onClose();
         } catch (e) {
           console.error('Something went wrong', e);
           // TODO: show in UI
@@ -63,7 +60,11 @@ const AddNewCargoPopup = props => {
   );
 
   return (
-    <Popup {...props} onClose={onClose}>
+    <Popup
+      {...props}
+      isOpen={popup.current === POPUPS.addNewCargo}
+      onClose={reset}
+    >
       <section>
         <h2 className={styles.title}>Add new cargo</h2>
         <form className={styles.form} onSubmit={onSubmit}>

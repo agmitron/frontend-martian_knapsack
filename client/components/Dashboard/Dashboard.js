@@ -9,6 +9,8 @@ import {
 
 import { useFetchInitialData } from '../../__mock_data__/useFetchInitialData';
 import { bindKeyboardShortcuts, focusControls } from './utils';
+import { usePopup } from '../../hooks/usePopup';
+import { POPUPS } from '../../contexts/UIStore/constants';
 
 function getComputedValues(items) {
   return items.reduce(
@@ -29,7 +31,6 @@ const Dashboard = () => {
     columnIndex: null
   });
 
-  const [isAddNewCargoPopupOpen, setIsAddNewCargoPopupOpen] = useState(false);
   const [filter, setFilter] = useState(FILTERS_ENUM.storage);
 
   const { error, loading: isLoading } = useFetchInitialData();
@@ -39,6 +40,10 @@ const Dashboard = () => {
 
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
+
+  const popup = usePopup();
+
+  const isAddNewCargoPopupOpen = popup.current === POPUPS.addNewCargo;
 
   const lastStorageCardIndex = useMemo(
     () => storageItems.length - 1,
@@ -134,8 +139,8 @@ const Dashboard = () => {
   );
 
   const closePopup = useCallback(
-    e => e.key === 'Escape' && setIsAddNewCargoPopupOpen(false),
-    []
+    e => e.key === 'Escape' && popup.close(),
+    [popup]
   );
 
   useEffect(() => {
@@ -153,7 +158,9 @@ const Dashboard = () => {
     <DashboardView
       storage={storage}
       cargoHold={cargoHold}
-      onAddNewItem={() => setIsAddNewCargoPopupOpen(true)}
+      onAddNewItem={() => {
+        popup.open(POPUPS.addNewCargo);
+      }}
       onResetItems={resetItems}
       onMoveToCargoHold={moveItemToCargoHold}
       onMoveToStorage={moveItemToStorage}
@@ -161,8 +168,6 @@ const Dashboard = () => {
       onCargoCardFocus={setFocusedCargoCard}
       filter={filter}
       onFilterChange={setFilter}
-      closeAddNewCargoPopup={() => setIsAddNewCargoPopupOpen(false)}
-      isAddNewCargoPopupOpen={isAddNewCargoPopupOpen}
     />
   );
 };

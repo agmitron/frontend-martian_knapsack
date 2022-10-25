@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
 import { Route, Switch } from 'wouter';
+import { useStickyHeader } from '../../hooks/useStickyHeader';
 
 import { Dashboard } from '../Dashboard/Dashboard';
 import { Header } from '../Header/Header';
@@ -9,19 +9,7 @@ import { Launch } from '../Launch/Launch';
 import styles from './Application.module.css';
 
 const Application = () => {
-  const [isHeaderSticky, setIsHeaderSticky] = useState(false);
-
-  useEffect(() => {
-    const toggleHeaderStickiness = () => {
-      setIsHeaderSticky(window.scrollY >= 300);
-    };
-
-    window.addEventListener('scroll', toggleHeaderStickiness);
-
-    return () => {
-      window.removeEventListener('scroll', toggleHeaderStickiness);
-    };
-  }, []);
+  const isHeaderSticky = useStickyHeader();
 
   return (
     <div

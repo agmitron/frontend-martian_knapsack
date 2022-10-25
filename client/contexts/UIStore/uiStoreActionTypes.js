@@ -1,0 +1,4 @@
+export const ACTION_TYPES = {
+  OPEN_POPUP: 'OPEN_POPUP',
+  CLOSE_POPUP: 'CLOSE_POPUP'
+};
