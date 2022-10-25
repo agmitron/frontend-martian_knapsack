@@ -4,13 +4,21 @@ import { useCallback, useRef } from 'react';
 import styles from './TextField.module.css';
 
 const propTypes = {
+  name: string.isRequired,
   textarea: bool,
   className: string,
   onChange: func,
   error: string
 };
 
-const TextField = ({ textarea, className, onChange, error, ...props }) => {
+const TextField = ({
+  name,
+  textarea,
+  className,
+  onChange,
+  error,
+  ...props
+}) => {
   const ref = useRef();
 
   const checkValidity = useCallback(() => {
@@ -25,7 +33,7 @@ const TextField = ({ textarea, className, onChange, error, ...props }) => {
     const error = checkValidity();
 
     if (onChange) {
-      onChange({ value: e.target.value, error });
+      onChange({ name, value: e.target.value, error });
     }
   };
 

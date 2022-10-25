@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useApplicationActions } from '../../contexts/ApplicationStore/ApplicationStore';
+import { useForm } from '../../hooks/useForm';
 import { sleep } from '../../utils';
 import { Button } from '../Button/Button';
 import { Popup, propTypes } from '../Popup/Popup';
@@ -17,79 +18,62 @@ const emptyForm = {
   value: emptyFormEntry
 };
 
-const hasErrors = formEntries =>
-  Object.values(formEntries).some(({ error }) => Boolean(error));
-
-const hasEmptyValues = formEntries =>
-  Object.values(formEntries).some(({ value }) => value === '');
-
-const extractValues = formEntries =>
-  Object.entries(formEntries).reduce(
+const extractValues = form =>
+  Object.entries(form).reduce(
     (acc, [key, { value }]) => ({ ...acc, [key]: value }),
     {}
   );
 
 const AddNewCargoPopup = props => {
   const { addNewItems } = useApplicationActions();
-  const [formEntries, setFormEntries] = useState(
-    window.structuredClone(emptyForm)
-  );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const onClose = useCallback(() => {
+    reset();
+    props.onClose();
+  }, [props, reset]);
+
+  const { reset, loading, error, form, invalid, onSubmit, onChange } = useForm(
+    emptyForm,
+    {
+      onSubmit: async form => {
+        try {
+          const values = extractValues(form);
+          const item = {
+            ...values,
+            id: nanoid(),
+            weight: Number(values.weight),
+            value: Number(values.value)
+          };
+
+          // Server imitation
+          await sleep(2000);
+          addNewItems([item]);
+          onClose();
+        } catch (e) {
+          console.error('Something went wrong', e);
+          // TODO: show in UI
+        }
+      }
+    }
+  );
 
   const isButtonDisabled = useMemo(
-    () => hasErrors(formEntries) || hasEmptyValues(formEntries) || isLoading,
-    [formEntries, isLoading]
+    () => [loading, invalid, error].some(Boolean),
+    [error, invalid, loading]
   );
-
-  const makeChangeHandler = field => state =>
-    setFormEntries(prev => ({ ...prev, [field]: state }));
-
-  const clearForm = () => setFormEntries(window.structuredClone(emptyForm));
-
-  const onClose = () => {
-    clearForm();
-    props.onClose();
-  };
-
-  // TODO: probably use context or hook for the forms ??
-  // TODO: refactor
-  const save = async e => {
-    try {
-      e.preventDefault();
-      const values = extractValues(formEntries);
-      const item = {
-        ...values,
-        id: nanoid(),
-        weight: Number(values.weight),
-        value: Number(values.value)
-      };
-
-      setIsLoading(true);
-      await sleep(2000);
-
-      addNewItems([item]);
-      onClose();
-    } catch (e) {
-      console.error('Something went wrong');
-      // TODO: show in UI
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Popup {...props} onClose={onClose}>
       <section>
         <h2 className={styles.title}>Add new cargo</h2>
-        <form className={styles.form} onSubmit={save}>
+        <form className={styles.form} onSubmit={onSubmit}>
           <TextField
             required
             placeholder="Name"
             name="title"
-            onChange={makeChangeHandler('title')}
-            value={formEntries.title.value}
-            error={formEntries.title.error}
+            onChange={onChange}
+            value={form.title.value}
+            error={form.title.error}
             tabIndex={0}
           />
           <TextField
@@ -97,9 +81,9 @@ const AddNewCargoPopup = props => {
             required
             placeholder="Description"
             name="description"
-            onChange={makeChangeHandler('description')}
-            value={formEntries.description.value}
-            error={formEntries.description.error}
+            onChange={onChange}
+            value={form.description.value}
+            error={form.description.error}
             tabIndex={0}
           />
           <TextField
@@ -107,9 +91,9 @@ const AddNewCargoPopup = props => {
             placeholder="Image URL"
             type="url"
             name="imageUrl"
-            onChange={makeChangeHandler('imageUrl')}
-            value={formEntries.imageUrl.value}
-            error={formEntries.imageUrl.error}
+            onChange={onChange}
+            value={form.imageUrl.value}
+            error={form.imageUrl.error}
             tabIndex={0}
           />
           <TextField
@@ -117,9 +101,9 @@ const AddNewCargoPopup = props => {
             placeholder="Weight"
             type="number"
             name="weight"
-            onChange={makeChangeHandler('weight')}
-            value={formEntries.weight.value}
-            error={formEntries.weight.error}
+            onChange={onChange}
+            value={form.weight.value}
+            error={form.weight.error}
             tabIndex={0}
           />
           <TextField
@@ -127,9 +111,9 @@ const AddNewCargoPopup = props => {
             placeholder="Value"
             type="number"
             name="value"
-            onChange={makeChangeHandler('value')}
-            value={formEntries.value.value}
-            error={formEntries.value.error}
+            onChange={onChange}
+            value={form.value.value}
+            error={form.value.error}
             tabIndex={0}
           />
           <Button

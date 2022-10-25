@@ -79,6 +79,7 @@ const DashboardView = ({
         size="md"
         icon="plus"
         onClick={onAddNewItem}
+        tabIndex={0}
       >
         Add New Cargo
       </Button>
@@ -162,6 +163,7 @@ const DashboardView = ({
         size="md"
         icon="trash"
         onClick={onResetItems}
+        tabIndex={0}
       >
         Clear All
       </Button>
