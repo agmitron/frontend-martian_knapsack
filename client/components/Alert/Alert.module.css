@@ -9,7 +9,6 @@
   color: white;
   border-radius: 5px;
   font-size: var(--size-text-sm);
-  min-width: 300px;
 }
 
 .success {

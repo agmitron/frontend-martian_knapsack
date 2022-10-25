@@ -18,3 +18,12 @@
   user-select: none;
   transition: visibility 0.4s, opacity 0.4s;
 }
+
+@media screen and (max-width: 425px) {
+  .root {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+}
