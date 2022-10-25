@@ -12,6 +12,7 @@ import { usePopup } from '../../hooks/usePopup';
 import { POPUPS } from '../../contexts/UIStore/constants';
 import { useNotification } from '../../hooks/useNotification';
 import { useFocus } from '../../hooks/useFocus';
+import { bindKeyboardShortcuts } from '../../utils';
 
 function getComputedValues(items) {
   return items.reduce(
@@ -32,6 +33,8 @@ const Dashboard = () => {
   const notification = useNotification();
   const popup = usePopup();
 
+  const isAddNewCargoPopupOpen = popup.current === POPUPS.addNewCargo;
+
   const { error, loading: isLoading } = useFetchInitialData();
 
   const { storageItems, cargoHoldItems, cargoHoldWeightLimit } =
@@ -44,10 +47,9 @@ const Dashboard = () => {
     storageItems,
     cargoHoldItems,
     moveItemToCargoHold,
-    moveItemToStorage
+    moveItemToStorage,
+    isPopupOpen: isAddNewCargoPopupOpen
   });
-
-  const isAddNewCargoPopupOpen = popup.current === POPUPS.addNewCargo;
 
   const storage = useMemo(
     () => ({
@@ -70,18 +72,68 @@ const Dashboard = () => {
     [isLoading, cargoHoldItems, cargoHoldWeightLimit, focus.shortcuts.cargoHold]
   );
 
+  const openPopup = useCallback(() => popup.open(POPUPS.addNewCargo), [popup]);
+
   const closePopup = useCallback(
     e => e.key === 'Escape' && popup.close(),
     [popup]
   );
 
+  const onKeyDown = useCallback(
+    e => {
+      const fn = bindKeyboardShortcuts({
+        n: () => {
+          openPopup();
+          focus.set({ columnIndex: null, cardIndex: null });
+        },
+        x: resetItems
+      });
+      fn(e);
+    },
+    [focus, openPopup, resetItems]
+  );
+
+  const setInitialFocus = useCallback(
+    e => {
+      const fn = bindKeyboardShortcuts({
+        ArrowDown: () => focus.set({ columnIndex: 0, cardIndex: 0 })
+      });
+
+      fn(e);
+    },
+    [focus]
+  );
+
   useEffect(() => {
     if (isAddNewCargoPopupOpen) {
-      window.addEventListener('keydown', closePopup);
+      document.addEventListener('keydown', closePopup);
     } else {
-      window.removeEventListener('keydown', closePopup);
+      document.removeEventListener('keydown', closePopup);
     }
   }, [closePopup, isAddNewCargoPopupOpen]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onKeyDown, openPopup, resetItems]);
+
+  useEffect(() => {
+    if (
+      focus.current.columnIndex === null &&
+      focus.current.cardIndex === null
+    ) {
+      document.addEventListener('keydown', setInitialFocus);
+    } else {
+      document.removeEventListener('keydown', setInitialFocus);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', setInitialFocus);
+    };
+  }, [focus, setInitialFocus]);
 
   if (error) {
     const text = 'Something went wrong.';
@@ -93,7 +145,7 @@ const Dashboard = () => {
     <DashboardView
       storage={storage}
       cargoHold={cargoHold}
-      onAddNewItem={() => popup.open(POPUPS.addNewCargo)}
+      onAddNewItem={openPopup}
       onResetItems={resetItems}
       onMoveToCargoHold={moveItemToCargoHold}
       onMoveToStorage={moveItemToStorage}
@@ -101,6 +153,7 @@ const Dashboard = () => {
       onCargoCardFocus={focus.set}
       filter={filter}
       onFilterChange={setFilter}
+      isPopupOpen={isAddNewCargoPopupOpen}
     />
   );
 };

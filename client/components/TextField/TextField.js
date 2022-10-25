@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { bool, func, string } from 'prop-types';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import styles from './TextField.module.css';
 
 const propTypes = {
@@ -8,7 +8,8 @@ const propTypes = {
   textarea: bool,
   className: string,
   onChange: func,
-  error: string
+  error: string,
+  isFocused: bool
 };
 
 const TextField = ({
@@ -17,6 +18,7 @@ const TextField = ({
   className,
   onChange,
   error,
+  isFocused,
   ...props
 }) => {
   const ref = useRef();
@@ -57,6 +59,14 @@ const TextField = ({
       onChange={changeHandler}
     />
   );
+
+  useEffect(() => {
+    if (isFocused) {
+      ref.current.focus();
+    } else {
+      ref.current.blur();
+    }
+  }, [isFocused]);
 
   return (
     <label className={classNames(styles.label, className)}>

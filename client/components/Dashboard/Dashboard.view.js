@@ -38,7 +38,8 @@ const propTypes = {
     cardIndex: number,
     columnIndex: number
   }).isRequired,
-  onCargoCardFocus: func.isRequired
+  onCargoCardFocus: func.isRequired,
+  isPopupOpen: bool
 };
 
 const DashboardView = ({
@@ -51,7 +52,8 @@ const DashboardView = ({
   focusedCargoCard,
   onCargoCardFocus,
   filter,
-  onFilterChange
+  onFilterChange,
+  isPopupOpen
 }) => (
   <div className={styles.root}>
     <div
@@ -91,7 +93,13 @@ const DashboardView = ({
             key={item.id}
             tabIndex={-1}
             role="menuitem"
-            onKeyDown={e => storage.onKeyDown(e, item)}
+            onKeyDown={e =>
+              storage.onKeyDown(e, {
+                item,
+                isDisabled:
+                  cargoHold.totalWeight + item.weight > cargoHold.weightLimit
+              })
+            }
           >
             <CargoCard
               title={item.title}
@@ -174,7 +182,7 @@ const DashboardView = ({
             key={item.id}
             tabIndex={-1}
             role="menuitem"
-            onKeyDown={e => cargoHold.onKeyDown(e, item)}
+            onKeyDown={e => cargoHold.onKeyDown(e, { item })}
           >
             <CargoCard
               title={item.title}
@@ -213,7 +221,7 @@ const DashboardView = ({
         ))}
       </ul>
     </div>
-    <AddNewCargoPopup />
+    <AddNewCargoPopup isOpen={isPopupOpen} />
   </div>
 );
 

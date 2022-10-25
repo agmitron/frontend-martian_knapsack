@@ -1,14 +1,5 @@
 import { useMemo, useState } from 'react';
-
-function bindKeyboardShortcuts(keyHandlerMapping) {
-  return (e, payload) => {
-    const handler = keyHandlerMapping[e.key];
-
-    if (handler) {
-      handler(e, payload);
-    }
-  };
-}
+import { bindKeyboardShortcuts } from '../utils';
 
 const focusControls = {
   left: ({ columnIndex, cardIndex }, lastCardIndex) => ({
@@ -27,7 +18,7 @@ const focusControls = {
     columnIndex,
     cardIndex: cardIndex >= lastCardIndex ? 0 : cardIndex + 1
   }),
-  blur: () => [null, null],
+  blur: () => ({ columnIndex: null, cardIndex: null }),
   slide: ({ columnIndex, cardIndex }, lastCardIndex) => ({
     columnIndex,
     cardIndex: cardIndex >= lastCardIndex ? cardIndex - 1 : cardIndex
@@ -38,7 +29,8 @@ function useFocus({
   storageItems,
   cargoHoldItems,
   moveItemToStorage,
-  moveItemToCargoHold
+  moveItemToCargoHold,
+  isPopupOpen
 }) {
   const [current, setCurrent] = useState({
     cardIndex: null,
@@ -57,9 +49,13 @@ function useFocus({
 
   const commonCargoCardShortcuts = useMemo(
     () => ({
-      Escape: () => setCurrent(focusControls.blur)
+      Escape: () => {
+        if (!isPopupOpen) {
+          setCurrent(focusControls.blur);
+        }
+      }
     }),
-    []
+    [isPopupOpen]
   );
 
   const storage = bindKeyboardShortcuts({
@@ -70,9 +66,11 @@ function useFocus({
       setCurrent(prev => focusControls.up(prev, lastStorageCardIndex)),
     ArrowDown: () =>
       setCurrent(prev => focusControls.down(prev, lastStorageCardIndex)),
-    Enter: (_, item) => {
-      moveItemToCargoHold(item.id);
-      setCurrent(prev => focusControls.slide(prev, lastStorageCardIndex));
+    Enter: (_, { item, isDisabled }) => {
+      if (!isDisabled) {
+        moveItemToCargoHold(item.id);
+        setCurrent(prev => focusControls.slide(prev, lastStorageCardIndex));
+      }
     }
   });
 
@@ -84,9 +82,11 @@ function useFocus({
       setCurrent(prev => focusControls.up(prev, lastCargoHoldCardIndex)),
     ArrowDown: () =>
       setCurrent(prev => focusControls.down(prev, lastCargoHoldCardIndex)),
-    Enter: (_, item) => {
-      moveItemToStorage(item.id);
-      setCurrent(prev => focusControls.slide(prev, lastCargoHoldCardIndex));
+    Enter: (_, { item, isDisabled }) => {
+      if (!isDisabled) {
+        moveItemToStorage(item.id);
+        setCurrent(prev => focusControls.slide(prev, lastCargoHoldCardIndex));
+      }
     }
   });
 

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useApplicationActions } from '../../contexts/ApplicationStore/ApplicationStore';
 import { POPUPS } from '../../contexts/UIStore/constants';
 import { useForm } from '../../hooks/useForm';
@@ -31,6 +31,7 @@ const AddNewCargoPopup = props => {
   const { addNewItems } = useApplicationActions();
   const popup = usePopup();
   const notification = useNotification();
+  const [isFirstInputFocused, setIsFirstInputFocused] = useState(false);
 
   const { reset, loading, error, form, invalid, onSubmit, onChange } = useForm(
     emptyForm,
@@ -67,6 +68,16 @@ const AddNewCargoPopup = props => {
     [error, invalid, loading]
   );
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsFirstInputFocused(props.isOpen);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [props.isOpen]);
+
   return (
     <Popup
       {...props}
@@ -84,6 +95,7 @@ const AddNewCargoPopup = props => {
             value={form.title.value}
             error={form.title.error}
             tabIndex={0}
+            isFocused={isFirstInputFocused}
           />
           <TextField
             textarea
