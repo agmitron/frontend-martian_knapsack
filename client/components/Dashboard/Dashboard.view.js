@@ -115,6 +115,9 @@ const DashboardView = ({
                   }}
                   onMouseDown={e => e.preventDefault()}
                   tabIndex="-1"
+                  isDisabled={
+                    cargoHold.totalWeight + item.weight > cargoHold.weightLimit
+                  }
                 >
                   <Icon type="package" />
                 </Button>
