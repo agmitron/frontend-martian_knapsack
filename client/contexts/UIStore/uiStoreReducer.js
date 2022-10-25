@@ -10,6 +10,15 @@ export function uiStoreReducer(state, action) {
       return { ...state, popup: null };
     }
 
+    case ACTION_TYPES.SHOW_NOTIFICATION: {
+      const notification = action.payload;
+      return { ...state, notification };
+    }
+
+    case ACTION_TYPES.HIDE_NOTIFICATION: {
+      return { ...state, notification: null };
+    }
+
     default: {
       return state;
     }

@@ -8,3 +8,11 @@ export function openPopup(dispatch) {
 export function closePopup(dispatch) {
   return () => dispatch({ type: ACTION_TYPES.CLOSE_POPUP });
 }
+
+export function showNotification(dispatch) {
+  return payload => dispatch({ type: ACTION_TYPES.SHOW_NOTIFICATION, payload });
+}
+
+export function hideNotification(dispatch) {
+  return () => dispatch({ type: ACTION_TYPES.HIDE_NOTIFICATION });
+}

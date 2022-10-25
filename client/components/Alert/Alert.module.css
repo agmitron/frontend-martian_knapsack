@@ -1,0 +1,29 @@
+.root {
+  display: grid;
+  grid-template-columns: 22px auto;
+  align-items: center;
+  column-gap: 20px;
+  width: 100%;
+  padding: 15px;
+  fill: white;
+  color: white;
+  border-radius: 5px;
+  font-size: var(--size-text-sm);
+  min-width: 300px;
+}
+
+.success {
+  background-color: var(--color-status-success);
+}
+
+.info {
+  background-color: var(--color-status-info);
+}
+
+.warning {
+  background-color: var(--color-status-warning);
+}
+
+.error {
+  background-color: var(--color-status-alert);
+}

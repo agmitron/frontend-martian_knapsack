@@ -11,6 +11,7 @@ import { useFetchInitialData } from '../../__mock_data__/useFetchInitialData';
 import { bindKeyboardShortcuts, focusControls } from './utils';
 import { usePopup } from '../../hooks/usePopup';
 import { POPUPS } from '../../contexts/UIStore/constants';
+import { useNotification } from '../../hooks/useNotification';
 
 function getComputedValues(items) {
   return items.reduce(
@@ -33,6 +34,9 @@ const Dashboard = () => {
 
   const [filter, setFilter] = useState(FILTERS_ENUM.storage);
 
+  const notification = useNotification();
+  const popup = usePopup();
+
   const { error, loading: isLoading } = useFetchInitialData();
 
   const { storageItems, cargoHoldItems, cargoHoldWeightLimit } =
@@ -40,8 +44,6 @@ const Dashboard = () => {
 
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
-
-  const popup = usePopup();
 
   const isAddNewCargoPopupOpen = popup.current === POPUPS.addNewCargo;
 
@@ -151,8 +153,11 @@ const Dashboard = () => {
     }
   }, [closePopup, isAddNewCargoPopupOpen]);
 
-  // TODO: handle error, show better UI
-  if (error) return <h1>Something went wrong.</h1>;
+  if (error) {
+    const text = 'Something went wrong.';
+    notification.show({ severity: 'error', text });
+    return <h1>{text}</h1>;
+  }
 
   return (
     <DashboardView

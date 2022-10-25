@@ -6,6 +6,9 @@ import RocketIcon from './assets/rocket.svg';
 import TrashIcon from './assets/trash.svg';
 import ArrowIcon from './assets/arrow.svg';
 import CrossIcon from './assets/cross.svg';
+import InfoIcon from './assets/info.svg';
+import WarningIcon from './assets/warning.svg';
+import SuccessIcon from './assets/success.svg';
 
 const MAP_TYPE_TO_ICON = {
   package: PackageIcon,
@@ -13,7 +16,10 @@ const MAP_TYPE_TO_ICON = {
   rocket: RocketIcon,
   trash: TrashIcon,
   arrow: ArrowIcon,
-  cross: CrossIcon
+  cross: CrossIcon,
+  info: InfoIcon,
+  warning: WarningIcon,
+  success: SuccessIcon
 };
 
 const propTypes = {

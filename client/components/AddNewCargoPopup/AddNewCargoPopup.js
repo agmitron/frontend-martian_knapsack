@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useApplicationActions } from '../../contexts/ApplicationStore/ApplicationStore';
 import { POPUPS } from '../../contexts/UIStore/constants';
 import { useForm } from '../../hooks/useForm';
+import { useNotification } from '../../hooks/useNotification';
 import { usePopup } from '../../hooks/usePopup';
 import { sleep } from '../../utils';
 import { Button } from '../Button/Button';
@@ -29,6 +30,7 @@ const extractValues = form =>
 const AddNewCargoPopup = props => {
   const { addNewItems } = useApplicationActions();
   const popup = usePopup();
+  const notification = useNotification();
 
   const { reset, loading, error, form, invalid, onSubmit, onChange } = useForm(
     emptyForm,
@@ -46,9 +48,9 @@ const AddNewCargoPopup = props => {
           // Server imitation
           await sleep(2000);
           addNewItems([item]);
-        } catch (e) {
-          console.error('Something went wrong', e);
-          // TODO: show in UI
+        } catch (error) {
+          console.error(error);
+          notification.show({ severity: 'error', text: error.message });
         }
       }
     }

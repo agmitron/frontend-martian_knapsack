@@ -2,6 +2,7 @@
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+  user-select: initial;
   transition: visibility 0.4s, opacity 0.4s;
 }
 
