@@ -45,9 +45,15 @@ const AddNewCargoPopup = props => {
             value: Number(values.value)
           };
 
-          // Server imitation
-          await sleep(2000);
+          await sleep(2000); // Server imitation
           addNewItems([item]);
+
+          notification.show({
+            severity: 'success',
+            text: 'The item has been successfully created.'
+          });
+          popup.close();
+          reset();
         } catch (error) {
           console.error(error);
           notification.show({ severity: 'error', text: error.message });

@@ -17,7 +17,7 @@ $rgb-brand-primary: 159, 166, 40;
   --color-status-alert: rgb($rgb-base-alert);
   --color-status-warning: rgb(237 108 2);
   --color-status-info: rgb(2 136 209);
-  --color-status-success: rgb(46 125 50);
+  --color-status-success: rgb($rgb-brand-primary);
   --color-status-accent: rgb($rgb-brand-primary);
   --color-status-accent-30: rgba($rgb-brand-primary, 0.3);
   --color-status-accent-80: rgba($rgb-brand-primary, 0.8);
