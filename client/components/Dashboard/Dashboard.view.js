@@ -19,14 +19,14 @@ const propTypes = {
     items: arrayOf(object.isRequired).isRequired,
     totalValue: number.isRequired,
     totalWeight: number.isRequired,
-    loading: bool
+    isLoading: bool
   }).isRequired,
   cargoHold: shape({
     items: arrayOf(object.isRequired).isRequired,
     totalValue: number.isRequired,
     totalWeight: number.isRequired,
     weightLimit: number.isRequired,
-    loading: bool
+    isLoading: bool
   }).isRequired,
   onAddNewItem: func.isRequired,
   onResetItems: func.isRequired,
@@ -70,7 +70,7 @@ const DashboardView = ({
           { label: 'Value', value: storage.totalValue },
           { label: 'Weight', value: storage.totalWeight }
         ]}
-        loading={storage.loading}
+        isLoading={storage.isLoading}
       />
       <Button
         className={styles.button}
@@ -88,7 +88,7 @@ const DashboardView = ({
         className={styles.filters}
       />
       <ul className={styles.list}>
-        {storage.loading && <CargoCardSkeleton />}
+        {storage.isLoading && <CargoCardSkeleton />}
         {storage.items.map((item, i) => (
           <li
             key={item.id}
@@ -109,17 +109,25 @@ const DashboardView = ({
                   variant="outlined"
                   size="md"
                   theme="accent"
-                  onClick={() => onMoveToCargoHold(item.id)}
+                  onClick={() => {
+                    onMoveToCargoHold(item.id);
+                    onCargoCardFocus({ cardIndex: null, columnIndex: null });
+                  }}
+                  onMouseDown={e => e.preventDefault()}
                   tabIndex="-1"
                 >
                   <Icon type="package" />
                 </Button>
               }
-              focused={
+              isFocused={
                 focusedCargoCard.columnIndex === 0 &&
                 focusedCargoCard.cardIndex === i
               }
               onFocus={() => onCargoCardFocus({ cardIndex: i, columnIndex: 0 })}
+              onBlur={() =>
+                onCargoCardFocus({ cardIndex: null, columnIndex: null })
+              }
+              tabIndex={i + i + 1}
             />
           </li>
         ))}
@@ -142,7 +150,7 @@ const DashboardView = ({
             limit: cargoHold.weightLimit
           }
         ]}
-        loading={cargoHold.loading}
+        isLoading={cargoHold.isLoading}
       />
       <Button
         className={styles.button}
@@ -180,17 +188,25 @@ const DashboardView = ({
                   variant="outlined"
                   size="md"
                   theme="alert"
-                  onClick={() => onMoveToStorage(item.id)}
+                  onClick={() => {
+                    onMoveToStorage(item.id);
+                    onCargoCardFocus({ cardIndex: null, columnIndex: null });
+                  }}
+                  onMouseDown={e => e.preventDefault()}
                   tabIndex="-1"
                 >
                   <Icon type="trash" />
                 </Button>
               }
-              focused={
+              isFocused={
                 focusedCargoCard.columnIndex === 1 &&
                 focusedCargoCard.cardIndex === i
               }
               onFocus={() => onCargoCardFocus({ cardIndex: i, columnIndex: 1 })}
+              onBlur={() =>
+                onCargoCardFocus({ cardIndex: null, columnIndex: null })
+              }
+              tabIndex={i + i + 2}
             />
           </li>
         ))}

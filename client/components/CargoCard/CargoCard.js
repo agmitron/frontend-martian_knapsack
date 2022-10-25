@@ -19,12 +19,19 @@ const propTypes = {
   entries: arrayOf(
     shape({ label: string.isRequired, value: number.isRequired }).isRequired
   ).isRequired,
-  loading: bool,
   actionButton: element,
+  isFocused: bool,
+  isLoading: bool,
+  onFocus: func,
   onClick: func,
   onKeyDown: func,
-  focused: bool,
-  onFocus: func
+  tabIndex: number
+};
+
+const defaultProps = {
+  tabIndex: 0,
+  isLoading: false,
+  isFocused: false
 };
 
 const CargoCard = ({
@@ -32,22 +39,23 @@ const CargoCard = ({
   description,
   imageUrl,
   entries,
-  loading,
+  isLoading,
   actionButton,
   onClick,
   onKeyDown,
-  focused,
-  onFocus
+  isFocused,
+  onFocus,
+  tabIndex
 }) => {
   const ref = useRef();
 
   useLayoutEffect(() => {
-    if (focused) {
+    if (isFocused) {
       ref.current.focus();
     } else {
       ref.current.blur();
     }
-  }, [focused]);
+  }, [isFocused]);
 
   return (
     <div
@@ -55,18 +63,18 @@ const CargoCard = ({
       onClick={onClick}
       onKeyDown={onKeyDown}
       role="menuitem"
-      tabIndex={0}
+      tabIndex={tabIndex}
       ref={ref}
       onFocus={onFocus}
     >
       <div
         className={classNames(styles['image-wrapper'], {
-          [styles.skeleton]: loading
+          [styles.skeleton]: isLoading
         })}
       >
         <img
           className={classNames(styles.image, {
-            [styles.loading]: loading
+            [styles.loading]: isLoading
           })}
           src={imageUrl}
           alt={title}
@@ -77,8 +85,8 @@ const CargoCard = ({
       <div className={styles.body}>
         <p
           className={classNames(styles.title, {
-            [styles.skeleton]: loading,
-            [styles.loading]: loading
+            [styles.skeleton]: isLoading,
+            [styles.loading]: isLoading
           })}
         >
           {title}
@@ -86,8 +94,8 @@ const CargoCard = ({
         {description && (
           <p
             className={classNames(styles.description, {
-              [styles.skeleton]: loading,
-              [styles.loading]: loading
+              [styles.skeleton]: isLoading,
+              [styles.loading]: isLoading
             })}
           >
             {description}
@@ -98,8 +106,8 @@ const CargoCard = ({
             <div
               key={entry.label}
               className={classNames(styles.item, {
-                [styles.skeleton]: loading,
-                [styles.loading]: loading
+                [styles.skeleton]: isLoading,
+                [styles.loading]: isLoading
               })}
             >
               <dt className={styles.label}>{entry.label}</dt>
@@ -114,5 +122,6 @@ const CargoCard = ({
 };
 
 CargoCard.propTypes = propTypes;
+CargoCard.defaultProps = defaultProps;
 
 export { CargoCard };

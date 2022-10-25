@@ -32,12 +32,10 @@ const Dashboard = () => {
   const [isAddNewCargoPopupOpen, setIsAddNewCargoPopupOpen] = useState(false);
   const [filter, setFilter] = useState(FILTERS_ENUM.storage);
 
-  const { error, loading } = useFetchInitialData();
+  const { error, loading: isLoading } = useFetchInitialData();
 
   const { storageItems, cargoHoldItems, cargoHoldWeightLimit } =
     useApplicationState();
-
-  console.log({ storageItems, cargoHoldItems });
 
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
@@ -61,7 +59,7 @@ const Dashboard = () => {
 
   const storage = useMemo(
     () => ({
-      loading,
+      isLoading,
       items: storageItems,
       onKeyDown: bindKeyboardShortcuts({
         ...commonCargoCardShortcuts,
@@ -87,7 +85,7 @@ const Dashboard = () => {
       ...getComputedValues(storageItems)
     }),
     [
-      loading,
+      isLoading,
       storageItems,
       commonCargoCardShortcuts,
       lastCargoHoldCardIndex,
@@ -98,7 +96,7 @@ const Dashboard = () => {
 
   const cargoHold = useMemo(
     () => ({
-      loading,
+      isLoading,
       items: cargoHoldItems,
       weightLimit: cargoHoldWeightLimit,
       onKeyDown: bindKeyboardShortcuts({
@@ -125,7 +123,7 @@ const Dashboard = () => {
       ...getComputedValues(cargoHoldItems)
     }),
     [
-      loading,
+      isLoading,
       cargoHoldItems,
       cargoHoldWeightLimit,
       commonCargoCardShortcuts,

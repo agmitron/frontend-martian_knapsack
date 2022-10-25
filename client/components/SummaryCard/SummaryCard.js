@@ -14,10 +14,10 @@ const propTypes = {
   ).isRequired,
   title: string.isRequired,
   imageUrl: string.isRequired,
-  loading: bool
+  isLoading: bool
 };
 
-const SummaryCard = ({ entries, title, imageUrl, loading }) => (
+const SummaryCard = ({ entries, title, imageUrl, isLoading }) => (
   <div className={styles.root} style={{ '--bg-image-url': `url(${imageUrl})` }}>
     <h2 className={styles.title}>{title}</h2>
     <dl className={styles.list}>
@@ -26,7 +26,7 @@ const SummaryCard = ({ entries, title, imageUrl, loading }) => (
           <dt className={styles.label}>{entry.label}</dt>
           <dd
             className={classNames(styles.value, {
-              [styles.loading]: loading
+              [styles.loading]: isLoading
             })}
           >
             {entry.limit
