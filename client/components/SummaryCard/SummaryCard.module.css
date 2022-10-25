@@ -40,7 +40,6 @@
   color: var(--color-typo-secondary);
 }
 
-/* TODO: reuse skeleton */
 .value.loading {
   color: transparent;
   background: linear-gradient(110deg, #b1b0b0 8%, #d4d1d1 18%, #b1b0b0 33%);

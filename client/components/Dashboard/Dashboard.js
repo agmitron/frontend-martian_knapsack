@@ -8,10 +8,10 @@ import {
 } from '../../contexts/ApplicationStore/ApplicationStore';
 
 import { useFetchInitialData } from '../../__mock_data__/useFetchInitialData';
-import { bindKeyboardShortcuts, focusControls } from './utils';
 import { usePopup } from '../../hooks/usePopup';
 import { POPUPS } from '../../contexts/UIStore/constants';
 import { useNotification } from '../../hooks/useNotification';
+import { useFocus } from '../../hooks/useFocus';
 
 function getComputedValues(items) {
   return items.reduce(
@@ -27,11 +27,6 @@ function getComputedValues(items) {
 }
 
 const Dashboard = () => {
-  const [focusedCargoCard, setFocusedCargoCard] = useState({
-    cardIndex: null,
-    columnIndex: null
-  });
-
   const [filter, setFilter] = useState(FILTERS_ENUM.storage);
 
   const notification = useNotification();
@@ -45,60 +40,23 @@ const Dashboard = () => {
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
 
+  const focus = useFocus({
+    storageItems,
+    cargoHoldItems,
+    moveItemToCargoHold,
+    moveItemToStorage
+  });
+
   const isAddNewCargoPopupOpen = popup.current === POPUPS.addNewCargo;
-
-  const lastStorageCardIndex = useMemo(
-    () => storageItems.length - 1,
-    [storageItems]
-  );
-
-  const lastCargoHoldCardIndex = useMemo(
-    () => cargoHoldItems.length - 1,
-    [cargoHoldItems]
-  );
-
-  const commonCargoCardShortcuts = useMemo(
-    () => ({
-      Escape: () => setFocusedCargoCard(focusControls.blur)
-    }),
-    []
-  );
 
   const storage = useMemo(
     () => ({
       isLoading,
       items: storageItems,
-      onKeyDown: bindKeyboardShortcuts({
-        ...commonCargoCardShortcuts,
-        ArrowRight: () =>
-          setFocusedCargoCard(prev =>
-            focusControls.right(prev, lastCargoHoldCardIndex)
-          ),
-        ArrowUp: () =>
-          setFocusedCargoCard(prev =>
-            focusControls.up(prev, lastStorageCardIndex)
-          ),
-        ArrowDown: () =>
-          setFocusedCargoCard(prev =>
-            focusControls.down(prev, lastStorageCardIndex)
-          ),
-        Enter: (_, item) => {
-          moveItemToCargoHold(item.id);
-          setFocusedCargoCard(prev =>
-            focusControls.slide(prev, lastStorageCardIndex)
-          );
-        }
-      }),
+      onKeyDown: focus.shortcuts.storage,
       ...getComputedValues(storageItems)
     }),
-    [
-      isLoading,
-      storageItems,
-      commonCargoCardShortcuts,
-      lastCargoHoldCardIndex,
-      lastStorageCardIndex,
-      moveItemToCargoHold
-    ]
+    [isLoading, storageItems, focus.shortcuts.storage]
   );
 
   const cargoHold = useMemo(
@@ -106,38 +64,10 @@ const Dashboard = () => {
       isLoading,
       items: cargoHoldItems,
       weightLimit: cargoHoldWeightLimit,
-      onKeyDown: bindKeyboardShortcuts({
-        ...commonCargoCardShortcuts,
-        ArrowLeft: () =>
-          setFocusedCargoCard(prev =>
-            focusControls.left(prev, lastStorageCardIndex)
-          ),
-        ArrowUp: () =>
-          setFocusedCargoCard(prev =>
-            focusControls.up(prev, lastCargoHoldCardIndex)
-          ),
-        ArrowDown: () =>
-          setFocusedCargoCard(prev =>
-            focusControls.down(prev, lastCargoHoldCardIndex)
-          ),
-        Enter: (_, item) => {
-          moveItemToStorage(item.id);
-          setFocusedCargoCard(prev =>
-            focusControls.slide(prev, lastCargoHoldCardIndex)
-          );
-        }
-      }),
+      onKeyDown: focus.shortcuts.cargoHold,
       ...getComputedValues(cargoHoldItems)
     }),
-    [
-      isLoading,
-      cargoHoldItems,
-      cargoHoldWeightLimit,
-      commonCargoCardShortcuts,
-      lastStorageCardIndex,
-      lastCargoHoldCardIndex,
-      moveItemToStorage
-    ]
+    [isLoading, cargoHoldItems, cargoHoldWeightLimit, focus.shortcuts.cargoHold]
   );
 
   const closePopup = useCallback(
@@ -163,14 +93,12 @@ const Dashboard = () => {
     <DashboardView
       storage={storage}
       cargoHold={cargoHold}
-      onAddNewItem={() => {
-        popup.open(POPUPS.addNewCargo);
-      }}
+      onAddNewItem={() => popup.open(POPUPS.addNewCargo)}
       onResetItems={resetItems}
       onMoveToCargoHold={moveItemToCargoHold}
       onMoveToStorage={moveItemToStorage}
-      focusedCargoCard={focusedCargoCard}
-      onCargoCardFocus={setFocusedCargoCard}
+      focusedCargoCard={focus.current}
+      onCargoCardFocus={focus.set}
       filter={filter}
       onFilterChange={setFilter}
     />
