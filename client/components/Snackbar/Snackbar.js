@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { bool, func, node, number } from 'prop-types';
 import styles from './Snackbar.module.css';
-import { noop, sleep } from '../../utils';
+import { noop } from '../../utils';
 
 const propTypes = {
   isOpen: bool,
@@ -18,20 +18,32 @@ const defaultProps = {
 };
 
 const Snackbar = ({ isOpen, autoHideDuration, onClose, children }) => {
-  const [hidden, setHidden] = useState(false);
+  const [isHidden, setIsHidden] = useState(!isOpen);
+
+  useEffect(() => setIsHidden(!isOpen), [isOpen]);
 
   useEffect(() => {
-    setHidden(!isOpen);
+    const timeout = setTimeout(() => {
+      setIsHidden(true);
+    }, autoHideDuration);
 
-    // It's needed to hide the snackbar smoothly.
-    sleep(autoHideDuration)
-      .then(() => setHidden(true))
-      .then(() => sleep(500))
-      .then(onClose);
-  }, [autoHideDuration, isOpen, onClose]);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [autoHideDuration, isOpen]);
+
+  useEffect(() => {
+    if (isHidden) {
+      const timeout = setTimeout(onClose, 500);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [isHidden, onClose]);
 
   return (
-    <div className={classNames(styles.root, { [styles.hidden]: hidden })}>
+    <div className={classNames(styles.root, { [styles.hidden]: isHidden })}>
       {children}
     </div>
   );

@@ -14,6 +14,11 @@ import storageImageUrl from './assets/storage.png';
 import styles from './Dashboard.module.css';
 import { DashboardList } from './DashboardList';
 
+const COLUMNS = {
+  storage: 0,
+  cargoHold: 1
+};
+
 const propTypes = {
   storage: shape({
     items: arrayOf(object.isRequired).isRequired,
@@ -42,20 +47,15 @@ const propTypes = {
   }).isRequired
 };
 
-const COLUMNS = {
-  storage: 0,
-  cargoHold: 1
-};
-
 const DashboardView = ({
-  cargoHold,
   storage,
+  cargoHold,
   onAddNewItem,
   onResetItems,
-  onMoveToCargoHold,
-  onMoveToStorage,
   filter,
   onFilterChange,
+  onMoveToCargoHold,
+  onMoveToStorage,
   isPopupOpen,
   focus
 }) => (

@@ -14,6 +14,8 @@ import { useNotification } from '../../hooks/useNotification';
 import { useFocus } from '../../hooks/useFocus';
 import { bindKeyboardShortcuts } from '../../utils';
 
+const errorMessage = 'Something went wrong. Try again later.';
+
 function getComputedValues(items) {
   return items.reduce(
     (acc, item) => ({
@@ -145,10 +147,14 @@ const Dashboard = () => {
     };
   }, [focus, setInitialFocus]);
 
+  useEffect(() => {
+    if (error) {
+      notification.show({ severity: 'error', text: errorMessage });
+    }
+  }, [error]);
+
   if (error) {
-    const text = 'Something went wrong.';
-    notification.show({ severity: 'error', text });
-    return <h1>{text}</h1>;
+    return <h1>{errorMessage}</h1>;
   }
 
   return (
