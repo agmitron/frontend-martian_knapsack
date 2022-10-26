@@ -33,7 +33,7 @@ const Dashboard = () => {
   const notification = useNotification();
   const popup = usePopup();
 
-  const isAddNewCargoPopupOpen = popup.current === POPUPS.addNewCargo;
+  const isPopupOpen = popup.current === POPUPS.addNewCargo;
 
   const { error, loading: isLoading } = useFetchInitialData();
 
@@ -43,12 +43,19 @@ const Dashboard = () => {
   const { moveItemToStorage, moveItemToCargoHold, resetItems } =
     useApplicationActions();
 
+  const cargoHoldComputedValues = useMemo(
+    () => getComputedValues(cargoHoldItems),
+    [cargoHoldItems]
+  );
+
   const focus = useFocus({
     storageItems,
     cargoHoldItems,
     moveItemToCargoHold,
     moveItemToStorage,
-    isPopupOpen: isAddNewCargoPopupOpen
+    isPopupOpen,
+    totalWeight: cargoHoldComputedValues.totalWeight,
+    weightLimit: cargoHoldWeightLimit
   });
 
   const storage = useMemo(
@@ -67,9 +74,15 @@ const Dashboard = () => {
       items: cargoHoldItems,
       weightLimit: cargoHoldWeightLimit,
       onKeyDown: focus.shortcuts.cargoHold,
-      ...getComputedValues(cargoHoldItems)
+      ...cargoHoldComputedValues
     }),
-    [isLoading, cargoHoldItems, cargoHoldWeightLimit, focus.shortcuts.cargoHold]
+    [
+      isLoading,
+      cargoHoldItems,
+      cargoHoldWeightLimit,
+      cargoHoldComputedValues,
+      focus.shortcuts.cargoHold
+    ]
   );
 
   const openPopup = useCallback(() => popup.open(POPUPS.addNewCargo), [popup]);
@@ -93,6 +106,22 @@ const Dashboard = () => {
     [focus, openPopup, resetItems]
   );
 
+  useEffect(() => {
+    if (isPopupOpen) {
+      document.addEventListener('keydown', closePopup);
+    } else {
+      document.removeEventListener('keydown', closePopup);
+    }
+  }, [closePopup, isPopupOpen]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onKeyDown, openPopup, resetItems]);
+
   const setInitialFocus = useCallback(
     e => {
       const fn = bindKeyboardShortcuts({
@@ -105,26 +134,7 @@ const Dashboard = () => {
   );
 
   useEffect(() => {
-    if (isAddNewCargoPopupOpen) {
-      document.addEventListener('keydown', closePopup);
-    } else {
-      document.removeEventListener('keydown', closePopup);
-    }
-  }, [closePopup, isAddNewCargoPopupOpen]);
-
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [onKeyDown, openPopup, resetItems]);
-
-  useEffect(() => {
-    if (
-      focus.current.columnIndex === null &&
-      focus.current.cardIndex === null
-    ) {
+    if (focus.isNull) {
       document.addEventListener('keydown', setInitialFocus);
     } else {
       document.removeEventListener('keydown', setInitialFocus);
@@ -149,11 +159,10 @@ const Dashboard = () => {
       onResetItems={resetItems}
       onMoveToCargoHold={moveItemToCargoHold}
       onMoveToStorage={moveItemToStorage}
-      focusedCargoCard={focus.current}
-      onCargoCardFocus={focus.set}
       filter={filter}
       onFilterChange={setFilter}
-      isPopupOpen={isAddNewCargoPopupOpen}
+      isPopupOpen={isPopupOpen}
+      focus={focus}
     />
   );
 };

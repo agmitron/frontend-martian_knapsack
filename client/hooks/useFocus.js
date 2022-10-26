@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { bindKeyboardShortcuts } from '../utils';
 
 const focusControls = {
@@ -30,6 +30,8 @@ function useFocus({
   cargoHoldItems,
   moveItemToStorage,
   moveItemToCargoHold,
+  totalWeight,
+  weightLimit,
   isPopupOpen
 }) {
   const [current, setCurrent] = useState({
@@ -58,6 +60,11 @@ function useFocus({
     [isPopupOpen]
   );
 
+  const isNull = useMemo(
+    () => current.columnIndex === null && current.cardIndex === null,
+    [current.cardIndex, current.columnIndex]
+  );
+
   const storage = bindKeyboardShortcuts({
     ...commonCargoCardShortcuts,
     ArrowRight: () =>
@@ -66,7 +73,9 @@ function useFocus({
       setCurrent(prev => focusControls.up(prev, lastStorageCardIndex)),
     ArrowDown: () =>
       setCurrent(prev => focusControls.down(prev, lastStorageCardIndex)),
-    Enter: (_, { item, isDisabled }) => {
+    Enter: (_, item) => {
+      const isDisabled = item.weight + totalWeight >= weightLimit;
+
       if (!isDisabled) {
         moveItemToCargoHold(item.id);
         setCurrent(prev => focusControls.slide(prev, lastStorageCardIndex));
@@ -82,21 +91,33 @@ function useFocus({
       setCurrent(prev => focusControls.up(prev, lastCargoHoldCardIndex)),
     ArrowDown: () =>
       setCurrent(prev => focusControls.down(prev, lastCargoHoldCardIndex)),
-    Enter: (_, { item, isDisabled }) => {
-      if (!isDisabled) {
-        moveItemToStorage(item.id);
-        setCurrent(prev => focusControls.slide(prev, lastCargoHoldCardIndex));
-      }
+    Enter: (_, item) => {
+      moveItemToStorage(item.id);
+      setCurrent(prev => focusControls.slide(prev, lastCargoHoldCardIndex));
     }
   });
 
+  const check = useCallback(
+    (columnIndex, cardIndex) =>
+      current.columnIndex === columnIndex && current.cardIndex === cardIndex,
+    [current.cardIndex, current.columnIndex]
+  );
+
+  const reset = useCallback(
+    () => setCurrent({ columnIndex: null, cardIndex: null }),
+    []
+  );
+
   return {
     current,
+    isNull,
     shortcuts: {
       storage,
       cargoHold
     },
-    set: setCurrent
+    set: setCurrent,
+    check,
+    reset
   };
 }
 
