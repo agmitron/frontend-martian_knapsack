@@ -4,15 +4,13 @@ import { Icon } from '../Icon/Icon';
 import styles from './Alert.module.css';
 
 const propTypes = {
-  severity: oneOf(['success', 'info', 'warning', 'error']).isRequired,
+  severity: oneOf(['alert', 'accent']).isRequired,
   children: node.isRequired
 };
 
 const MAP_SEVERITY_TO_ICON = {
-  success: 'success',
-  info: 'info',
-  error: 'info',
-  warning: 'warning'
+  accent: 'success',
+  alert: 'info'
 };
 
 const Alert = ({ severity, children }) => (

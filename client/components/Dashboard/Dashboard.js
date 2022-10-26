@@ -89,11 +89,6 @@ const Dashboard = () => {
 
   const openPopup = useCallback(() => popup.open(POPUPS.addNewCargo), [popup]);
 
-  const closePopup = useCallback(
-    e => e.key === 'Escape' && popup.close(),
-    [popup]
-  );
-
   const onKeyDown = useCallback(
     e => {
       const fn = bindKeyboardShortcuts({
@@ -109,47 +104,16 @@ const Dashboard = () => {
   );
 
   useEffect(() => {
-    if (isPopupOpen) {
-      document.addEventListener('keydown', closePopup);
-    } else {
-      document.removeEventListener('keydown', closePopup);
-    }
-  }, [closePopup, isPopupOpen]);
-
-  useEffect(() => {
     document.addEventListener('keydown', onKeyDown);
 
     return () => {
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [onKeyDown, openPopup, resetItems]);
-
-  const setInitialFocus = useCallback(
-    e => {
-      const fn = bindKeyboardShortcuts({
-        ArrowDown: () => focus.set({ columnIndex: 0, cardIndex: 0 })
-      });
-
-      fn(e);
-    },
-    [focus]
-  );
-
-  useEffect(() => {
-    if (focus.isNull) {
-      document.addEventListener('keydown', setInitialFocus);
-    } else {
-      document.removeEventListener('keydown', setInitialFocus);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', setInitialFocus);
-    };
-  }, [focus, setInitialFocus]);
+  }, [onKeyDown, resetItems]);
 
   useEffect(() => {
     if (error) {
-      notification.show({ severity: 'error', text: errorMessage });
+      notification.show({ severity: 'alert', text: errorMessage });
     }
   }, [error]);
 

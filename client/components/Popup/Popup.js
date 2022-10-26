@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { bool, func, node } from 'prop-types';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { usePopup } from '../../hooks/usePopup';
 import { Button } from '../Button/Button';
 import { Icon } from '../Icon/Icon';
@@ -23,6 +23,34 @@ const Popup = ({ children, isOpen, onClose }) => {
 
     popup.close();
   }, [onClose, popup]);
+
+  useEffect(() => {
+    const $root = document.querySelector(':root');
+
+    if (!$root) {
+      return;
+    }
+
+    if (isOpen) {
+      $root.style.setProperty('--overflow-y', 'hidden');
+    } else {
+      $root.style.removeProperty('--overflow-y');
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const closePopupByEscape = e => {
+      if (isOpen && e.key === 'Escape') {
+        popup.close();
+      }
+    };
+
+    document.addEventListener('keydown', closePopupByEscape);
+
+    return () => {
+      document.removeEventListener('keydown', closePopupByEscape);
+    };
+  }, [isOpen, popup]);
 
   return (
     <div

@@ -11,18 +11,10 @@
   font-size: var(--size-text-sm);
 }
 
-.success {
-  background-color: var(--color-status-success);
+.accent {
+  background-color: var(--color-status-accent);
 }
 
-.info {
-  background-color: var(--color-status-info);
-}
-
-.warning {
-  background-color: var(--color-status-warning);
-}
-
-.error {
+.alert {
   background-color: var(--color-status-alert);
 }

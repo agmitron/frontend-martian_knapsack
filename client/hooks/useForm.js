@@ -3,12 +3,16 @@ import { useCallback, useMemo, useState } from 'react';
 const hasErrors = formEntries =>
   Object.values(formEntries).some(({ error }) => Boolean(error));
 
+const hasEmptyValues = formEntries =>
+  Object.values(formEntries).some(({ value }) => value === '');
+
 function useForm(entries, handlers) {
   const [form, setForm] = useState(window.structuredClone(entries));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const invalid = useMemo(() => hasErrors(form), [form]);
+  const filled = useMemo(() => !hasEmptyValues(form), [form]);
 
   const reset = useCallback(
     () => setForm(window.structuredClone(entries)),
@@ -45,6 +49,7 @@ function useForm(entries, handlers) {
   );
 
   return {
+    filled,
     invalid,
     loading,
     error,

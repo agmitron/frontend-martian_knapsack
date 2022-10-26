@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useApplicationActions } from '../../contexts/ApplicationStore/ApplicationStore';
 import { POPUPS } from '../../contexts/UIStore/constants';
 import { useForm } from '../../hooks/useForm';
@@ -33,39 +33,42 @@ const AddNewCargoPopup = props => {
   const notification = useNotification();
   const [isFirstInputFocused, setIsFirstInputFocused] = useState(false);
 
-  const { reset, loading, error, form, invalid, onSubmit, onChange } = useForm(
-    emptyForm,
-    {
-      onSubmit: async form => {
-        try {
-          const values = extractValues(form);
-          const item = {
-            ...values,
-            id: nanoid(),
-            weight: Number(values.weight),
-            value: Number(values.value)
-          };
+  const create = useCallback(
+    async form => {
+      try {
+        const values = extractValues(form);
+        const item = {
+          ...values,
+          id: nanoid(),
+          weight: Number(values.weight),
+          value: Number(values.value)
+        };
 
-          await sleep(2000); // Server imitation
-          addNewItems([item]);
+        await sleep(2000); // Server imitation
+        addNewItems([item]);
 
-          notification.show({
-            severity: 'success',
-            text: 'The item has been successfully created.'
-          });
-          popup.close();
-          reset();
-        } catch (error) {
-          console.error(error);
-          notification.show({ severity: 'error', text: error.message });
-        }
+        notification.show({
+          severity: 'accent',
+          text: 'The item has been successfully created.'
+        });
+        popup.close();
+        reset();
+      } catch (error) {
+        console.error(error);
+        notification.show({ severity: 'alert', text: error.message });
       }
-    }
+    },
+    [addNewItems, notification, popup, reset]
   );
 
+  const { reset, loading, error, form, invalid, filled, onSubmit, onChange } =
+    useForm(emptyForm, {
+      onSubmit: create
+    });
+
   const isButtonDisabled = useMemo(
-    () => [loading, invalid, error].some(Boolean),
-    [error, invalid, loading]
+    () => [loading, invalid, error, !filled].some(Boolean),
+    [error, filled, invalid, loading]
   );
 
   useEffect(() => {

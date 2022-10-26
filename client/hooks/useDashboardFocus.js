@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { bindKeyboardShortcuts } from '../utils';
 
 const focusControls = {
@@ -107,6 +107,26 @@ function useDashboardFocus({
     () => setCurrent({ columnIndex: null, cardIndex: null }),
     []
   );
+
+  const setInitialFocus = useCallback(e => {
+    const fn = bindKeyboardShortcuts({
+      ArrowDown: () => setCurrent({ columnIndex: 0, cardIndex: 0 })
+    });
+
+    fn(e);
+  }, []);
+
+  useEffect(() => {
+    if (isNull) {
+      document.addEventListener('keydown', setInitialFocus);
+    } else {
+      document.removeEventListener('keydown', setInitialFocus);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', setInitialFocus);
+    };
+  }, [isNull, setInitialFocus]);
 
   return {
     current,
