@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { bindKeyboardShortcuts } from '../utils';
 
 const focusControls = {
@@ -108,25 +108,39 @@ function useDashboardFocus({
     []
   );
 
-  const setInitialFocus = useCallback(e => {
-    const fn = bindKeyboardShortcuts({
-      ArrowDown: () => setCurrent({ columnIndex: 0, cardIndex: 0 })
-    });
+  useLayoutEffect(() => {
+    const onKeyDown = e => {
+      if (e.key === 'Escape') {
+        document.activeElement.blur();
+        document.body.focus();
+        reset();
+      }
 
-    fn(e);
-  }, []);
+      // TODO: probably needs refactor - looks like a terrible crutch
+      if (
+        e.key === 'Tab' &&
+        isNull &&
+        document.activeElement === document.body
+      ) {
+        setTimeout(() => {
+          const firstElement = document.querySelector('[tabindex="0"]');
+          if (firstElement) {
+            firstElement.focus();
+          }
+        }, 0);
+      }
 
-  useEffect(() => {
-    if (isNull) {
-      document.addEventListener('keydown', setInitialFocus);
-    } else {
-      document.removeEventListener('keydown', setInitialFocus);
-    }
+      if (e.key === 'ArrowDown' && isNull) {
+        setCurrent({ columnIndex: 0, cardIndex: 0 });
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', setInitialFocus);
+      document.removeEventListener('keydown', onKeyDown);
     };
-  }, [isNull, setInitialFocus]);
+  }, [isNull, reset]);
 
   return {
     current,

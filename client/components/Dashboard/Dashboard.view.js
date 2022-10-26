@@ -44,7 +44,8 @@ const propTypes = {
   focus: shape({
     set: func.isRequired,
     reset: func.isRequired,
-    check: func.isRequired
+    check: func.isRequired,
+    isNull: bool.isRequired
   }).isRequired
 };
 
