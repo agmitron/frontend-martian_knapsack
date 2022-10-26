@@ -18,7 +18,7 @@ const ACTION_TYPE_TO_THEME = {
   delete: 'alert'
 };
 
-const ActionButton = ({ onClick, isDisabled, type }) => (
+const DashboardActionButton = ({ onClick, isDisabled, type }) => (
   <Button
     variant="outlined"
     size="md"
@@ -32,6 +32,6 @@ const ActionButton = ({ onClick, isDisabled, type }) => (
   </Button>
 );
 
-ActionButton.propTypes = propTypes;
+DashboardActionButton.propTypes = propTypes;
 
-export { ActionButton };
+export { DashboardActionButton };

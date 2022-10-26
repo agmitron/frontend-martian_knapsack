@@ -12,6 +12,7 @@ $rgb-brand-primary: 159, 166, 40;
 
   /* Background colors */
   --color-bg-primary: rgb($rgb-base-secondary);
+  --color-bg-secondary: rgb($rgb-base-muted);
 
   /* Status colors */
   --color-status-alert: rgb($rgb-base-alert);

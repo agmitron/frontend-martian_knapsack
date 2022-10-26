@@ -11,7 +11,7 @@ import { useFetchInitialData } from '../../__mock_data__/useFetchInitialData';
 import { usePopup } from '../../hooks/usePopup';
 import { POPUPS } from '../../contexts/UIStore/constants';
 import { useNotification } from '../../hooks/useNotification';
-import { useFocus } from '../../hooks/useFocus';
+import { useDashboardFocus } from '../../hooks/useDashboardFocus';
 import { bindKeyboardShortcuts } from '../../utils';
 
 const errorMessage = 'Something went wrong. Try again later.';
@@ -50,7 +50,7 @@ const Dashboard = () => {
     [cargoHoldItems]
   );
 
-  const focus = useFocus({
+  const focus = useDashboardFocus({
     storageItems,
     cargoHoldItems,
     moveItemToCargoHold,

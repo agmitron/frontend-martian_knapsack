@@ -25,6 +25,12 @@
   color: white;
 }
 
+.button-with-shortcut {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+
 @media screen and (max-width: 769px) {
   .root {
     grid-template-columns: 1fr;

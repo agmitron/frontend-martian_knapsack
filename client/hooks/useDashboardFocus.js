@@ -25,7 +25,7 @@ const focusControls = {
   })
 };
 
-function useFocus({
+function useDashboardFocus({
   storageItems,
   cargoHoldItems,
   moveItemToStorage,
@@ -121,4 +121,4 @@ function useFocus({
   };
 }
 
-export { useFocus };
+export { useDashboardFocus };

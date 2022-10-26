@@ -6,7 +6,8 @@ import { Button } from '../Button/Button';
 import { Filter, FILTERS_ENUM } from '../Filter/Filter';
 import { Icon } from '../Icon/Icon';
 import { SummaryCard } from '../SummaryCard/SummaryCard';
-import { ActionButton } from './ActionButton';
+import { Keybinding } from '../Keybinding/Keybinding';
+import { DashboardActionButton } from './DashboardActionButton';
 
 import cargoHoldImageUrl from './assets/cargo-hold.png';
 import storageImageUrl from './assets/storage.png';
@@ -83,7 +84,9 @@ const DashboardView = ({
         onClick={onAddNewItem}
         tabIndex={0}
       >
-        Add New Cargo
+        <p className={styles['button-with-shortcut']}>
+          Add New Cargo <Keybinding button="N" />
+        </p>
       </Button>
       <Filter
         activeFilter={filter}
@@ -96,7 +99,7 @@ const DashboardView = ({
         hasSkeleton={true}
         items={storage.items}
         ActionButton={({ item }) => (
-          <ActionButton
+          <DashboardActionButton
             onClick={() => {
               onMoveToCargoHold(item.id);
               focus.reset();
@@ -143,7 +146,9 @@ const DashboardView = ({
         onClick={onResetItems}
         tabIndex={0}
       >
-        Clear All
+        <p className={styles['button-with-shortcut']}>
+          Clear all <Keybinding button="X" />
+        </p>
       </Button>
       <Filter
         activeFilter={filter}
@@ -155,7 +160,7 @@ const DashboardView = ({
         columnIndex={COLUMNS.cargoHold}
         items={cargoHold.items}
         ActionButton={({ item }) => (
-          <ActionButton
+          <DashboardActionButton
             onClick={() => {
               onMoveToStorage(item.id);
               focus.reset();
