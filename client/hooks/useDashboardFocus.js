@@ -39,6 +39,8 @@ function useDashboardFocus({
     columnIndex: null
   });
 
+  const [isFirstElementFocused, setIsFirstElementFocused] = useState(false);
+
   const lastStorageCardIndex = useMemo(
     () => storageItems.length - 1,
     [storageItems]
@@ -97,16 +99,25 @@ function useDashboardFocus({
     }
   });
 
+  const set = useCallback(
+    state => {
+      if (!isFirstElementFocused) {
+        setCurrent(state);
+      }
+    },
+    [isFirstElementFocused]
+  );
+
   const check = useCallback(
     (columnIndex, cardIndex) =>
       current.columnIndex === columnIndex && current.cardIndex === cardIndex,
     [current.cardIndex, current.columnIndex]
   );
 
-  const reset = useCallback(
-    () => setCurrent({ columnIndex: null, cardIndex: null }),
-    []
-  );
+  const reset = useCallback(() => {
+    setCurrent({ columnIndex: null, cardIndex: null });
+    setIsFirstElementFocused(false);
+  }, []);
 
   useLayoutEffect(() => {
     const onKeyDown = e => {
@@ -116,22 +127,13 @@ function useDashboardFocus({
         reset();
       }
 
-      // TODO: probably needs refactor - looks like a terrible crutch
-      if (
-        e.key === 'Tab' &&
-        isNull &&
-        document.activeElement === document.body
-      ) {
-        setTimeout(() => {
-          const firstElement = document.querySelector('[tabindex="0"]');
-          if (firstElement) {
-            firstElement.focus();
-          }
-        }, 0);
+      if (e.key === 'Tab' && isNull) {
+        setIsFirstElementFocused(document.activeElement === document.body);
       }
 
       if (e.key === 'ArrowDown' && isNull) {
         setCurrent({ columnIndex: 0, cardIndex: 0 });
+        setIsFirstElementFocused(false);
       }
     };
 
@@ -145,11 +147,12 @@ function useDashboardFocus({
   return {
     current,
     isNull,
+    isFirstElementFocused,
     shortcuts: {
       storage,
       cargoHold
     },
-    set: setCurrent,
+    set,
     check,
     reset
   };

@@ -84,6 +84,7 @@ const DashboardView = ({
         icon="plus"
         onClick={onAddNewItem}
         tabIndex={0}
+        isFocused={focus.isFirstElementFocused}
       >
         <p className={styles['button-with-shortcut']}>
           Add New Cargo <Keybinding button="N" />
