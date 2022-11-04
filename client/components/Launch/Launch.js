@@ -1,6 +1,9 @@
 import { Button } from '../Button/Button';
 
-import { useApplicationState } from '../../contexts/ApplicationStore/ApplicationStore';
+import {
+  useApplicationActions,
+  useApplicationState
+} from '../../contexts/ApplicationStore/ApplicationStore';
 
 import { LaunchAnimation } from './components/LaunchAnimation/LaunchAnimation';
 
@@ -8,6 +11,7 @@ import styles from './Launch.module.css';
 
 const Launch = () => {
   const { cargoHoldItems } = useApplicationState();
+  const { resetItems } = useApplicationActions();
 
   return (
     <div className={styles.root}>
@@ -32,6 +36,7 @@ const Launch = () => {
       <Button
         className={styles.button}
         to="/"
+        onClickCapture={resetItems}
         variant="outlined"
         theme="accent"
         size="md"

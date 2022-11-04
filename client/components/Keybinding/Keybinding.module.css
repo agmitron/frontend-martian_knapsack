@@ -1,0 +1,17 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0.5px 1.5px 0 rgb(0 0 0 / 75%);
+  background-color: var(--color-bg-secondary);
+  color: rgb(67 67 67);
+  font-size: 12px;
+  line-height: 8px;
+  padding: 4px 8px;
+}
+
+@media screen and (max-width: 769px) {
+  .root {
+    display: none;
+  }
+}

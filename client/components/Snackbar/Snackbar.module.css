@@ -1,0 +1,29 @@
+.root {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  visibility: visible;
+  z-index: 2;
+  opacity: 1;
+  pointer-events: all;
+  user-select: initial;
+  transition: visibility 0s, opacity 0.4s;
+  box-shadow: 0 0 15px -6px rgb(0 0 0 / 80%);
+}
+
+.root.hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transition: visibility 0.4s, opacity 0.4s;
+}
+
+@media screen and (max-width: 425px) {
+  .root {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+}

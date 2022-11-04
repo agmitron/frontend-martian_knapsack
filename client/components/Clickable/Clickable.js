@@ -6,6 +6,7 @@ import cx from 'classnames';
 import { Link } from '../Link/Link';
 
 import styles from './Clickable.module.css';
+import { useEffect, useRef } from 'react';
 
 const propTypes = {
   children: node.isRequired,
@@ -15,7 +16,8 @@ const propTypes = {
   to: string,
   type: string,
   onClick: func,
-  isDisabled: bool
+  isDisabled: bool,
+  isFocused: bool
 };
 
 const defaultProps = {
@@ -25,7 +27,8 @@ const defaultProps = {
   to: null,
   type: null,
   onClick: null,
-  isDisabled: false
+  isDisabled: false,
+  isFocused: false
 };
 
 function getButtonProps({ type, isDisabled }) {
@@ -57,8 +60,11 @@ const Clickable = ({
   type,
   onClick,
   isDisabled,
+  isFocused,
   ...restProps
 }) => {
+  const ref = useRef();
+
   const isExternalLink = Boolean(href);
   const isInternalLink = Boolean(to);
 
@@ -71,10 +77,23 @@ const Clickable = ({
     ? [Link, { to }]
     : ['button', getButtonProps({ type, isDisabled })];
 
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    if (isFocused) {
+      ref.current.focus();
+    } else {
+      ref.current.blur();
+    }
+  }, [isFocused]);
+
   return (
     <ComponentToRender
       className={cx(styles.root, className, componentClassName)}
       onClick={onClick}
+      ref={ref}
       {...componentProps}
       {...restProps}
     >

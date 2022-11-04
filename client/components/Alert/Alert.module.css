@@ -1,0 +1,20 @@
+.root {
+  display: grid;
+  grid-template-columns: 22px auto;
+  align-items: center;
+  column-gap: 20px;
+  width: 100%;
+  padding: 15px;
+  fill: white;
+  color: white;
+  border-radius: 5px;
+  font-size: var(--size-text-sm);
+}
+
+.accent {
+  background-color: var(--color-status-accent);
+}
+
+.alert {
+  background-color: var(--color-status-alert);
+}

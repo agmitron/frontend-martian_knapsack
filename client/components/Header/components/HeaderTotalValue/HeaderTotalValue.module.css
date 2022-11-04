@@ -1,12 +1,16 @@
 .root {
-  display: flex;
-  font-size: var(--size-text-xl);
-  line-height: var(--line-height-text-xl);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 3px;
+  font-size: var(--size-text-md);
+  line-height: var(--line-height-text-md);
   color: var(--color-typo-secondary);
 }
 
 .label {
-  margin-right: 12px;
+  font-weight: bold;
 
   &::after {
     content: ':';
@@ -14,5 +18,20 @@
 }
 
 .value {
-  font-weight: bold;
+  font-weight: normal;
+}
+
+@media screen and (max-width: 769px) {
+  .root {
+    font-size: var(--size-text-sm);
+    line-height: var(--line-height-text-sm);
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .label,
+  .value {
+    font-size: var(--size-text-xs);
+    line-height: var(--line-height-text-xs);
+  }
 }

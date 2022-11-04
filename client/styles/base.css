@@ -14,9 +14,14 @@
   src: url('../fonts/Ubuntu/Ubuntu-Bold.ttf') format('truetype');
 }
 
+:root {
+  --overflow-y: scroll;
+}
+
 html {
+  overflow-y: var(--overflow-y);
   box-sizing: border-box;
-  font-family: Ubuntu, Lucida Grande, Helvetica Neue, Arial, sans-serif;
+  font-family: Ubuntu, 'Lucida Grande', 'Helvetica Neue', Arial, sans-serif;
 }
 
 *,

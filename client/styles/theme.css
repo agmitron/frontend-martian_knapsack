@@ -12,6 +12,7 @@ $rgb-brand-primary: 159, 166, 40;
 
   /* Background colors */
   --color-bg-primary: rgb($rgb-base-secondary);
+  --color-bg-secondary: rgb($rgb-base-muted);
 
   /* Status colors */
   --color-status-alert: rgb($rgb-base-alert);
@@ -23,9 +24,20 @@ $rgb-brand-primary: 159, 166, 40;
   --border-primary: 1px solid rgb($rgb-base-muted);
   --border-secondary: 1px solid rgba($rgb-base-muted, 0.5);
   --border-accent: 1px solid rgb($rgb-brand-primary);
+  --border-alert: 1px solid var(--color-status-alert);
 
   /* Border radius */
   --border-radius-sm: 6px;
   --border-radius-md: 16px;
   --border-radius-lg: 20px;
+
+  /* States */
+  --background-color-hover-primary: rgba($rgb-base-muted, 0.15);
+  --background-color-active-primary: rgba($rgb-base-muted, 0.45);
+  --background-color-active-secondary: rgba($rgb-base-muted, 0.2);
+  --background-color-disabled-primary: rgba($rgb-base-muted, 0.5);
+
+  /* Transitions */
+  --transition-hover: 0.25s ease;
+  --transition-focus: 0.5s ease;
 }

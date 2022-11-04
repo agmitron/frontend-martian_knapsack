@@ -1,7 +1,8 @@
 import { Fragment } from 'react';
-import { arrayOf, number, shape, string } from 'prop-types';
+import { arrayOf, bool, number, shape, string } from 'prop-types';
 
 import styles from './SummaryCard.module.css';
+import classNames from 'classnames';
 
 const propTypes = {
   entries: arrayOf(
@@ -12,17 +13,22 @@ const propTypes = {
     }).isRequired
   ).isRequired,
   title: string.isRequired,
-  imageUrl: string.isRequired
+  imageUrl: string.isRequired,
+  isLoading: bool
 };
 
-const SummaryCard = ({ entries, title, imageUrl }) => (
+const SummaryCard = ({ entries, title, imageUrl, isLoading }) => (
   <div className={styles.root} style={{ '--bg-image-url': `url(${imageUrl})` }}>
     <h2 className={styles.title}>{title}</h2>
     <dl className={styles.list}>
       {entries.map(entry => (
         <Fragment key={entry.label}>
           <dt className={styles.label}>{entry.label}</dt>
-          <dd className={styles.value}>
+          <dd
+            className={classNames(styles.value, {
+              [styles.loading]: isLoading
+            })}
+          >
             {entry.limit
               ? `${entry.value}\xa0/\xa0${entry.limit}`
               : entry.value}
